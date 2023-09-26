@@ -1,84 +1,71 @@
+//입력의 첫줄 => 국가의 수 , 등수를 알고픈 국가
+//입력 => 국가를 나타내는 정수값 , 금메달 ,은메달 ,동메달
+
 #include <stdio.h>
+#include <stdlib.h>
+
+struct medal
+//포인터 변수로 구성된 구조채
+{
+	int* gold;
+	int* selver;
+	int* copper;
+}medal;
+
+
 
 int main(void)
 {
-	int gold_arr[100] = { 0 }, selver_arr[100] = { 0 }, copper_arr[100] = { 0 };
-	int country_num, rank,country_member;
-	int country[1000][3];
-	int g_last = 0, s_last=0, c_last=0;
-	int g_sum = 0, s_sum = 0, c_sum = 0;
+	int country_num, country_rank;
+	medal.gold = (int*)malloc(sizeof(int) * 1000);
+	//각 구조체를 int형 메모리를 할당한다.(4바이트*country_num 정도의 크기를 갖는 메모리 크기)
+	//그것으로 메모리 크기를 할당 받은 구조체 배열을 만든다.
+	medal.selver = (int*)malloc(sizeof(int) * 1000);
+	medal.copper = (int*)malloc(sizeof(int) * 1000);
+	int ranking = 1;
+	int member;
 
-	scanf_s("%d %d", &country_num, &rank);
-	for (int i = 0;i < country_num; i++)
+	scanf_s("%d %d", &country_num, &country_rank);
+	for (int i = 0; i < country_num; i++)
 	{
-		int gold, selver, copper;
-		scanf_s("%d", &country_member);
-		scanf_s("%d %d %d", &country[country_member][0], &country[country_member][1], &country[country_member][2]);
-		gold = country[country_member][0];
-		selver = country[country_member][1];
-		copper = country[country_member][2];
-		
-		if (country[country_member][0] > 0)
+		scanf_s("%d", &member);
+		//member의 입력값은 1부터 시작하므로 배열의 0번째 요소부터 시작이 아닌 1부터 시작한다.
+		scanf_s("%d %d %d", &medal.gold[member], &medal.selver[member], &medal.copper[member]);
+
+	}
+	for (int k = 1; k <= country_num; k++)
+		//첫번째 나라부터 끝 나라까지 rank번째 나라와 비교하며.
+		//k번째 나라보다 순위가 낮으면 ranking에다 1을 더하여 순위를 뒤로 미룬다.
+	{
+		if (medal.gold[k] > medal.gold[country_rank])
+			//k번째 나라의 금메달이 더 많으면 rank나라의 순위는 뒤로 밀려난다.
 		{
-			gold_arr[gold] += 1;
-			g_last = g_last < gold ? gold + 1 : g_last;
-			g_sum++;//rank의 금메달이 0일때를 대비하여
+			ranking++;
 		}
-		//gold값이 0이하 일때 밑의 조건문들을 실행
-		else if (country[country_member][1] > 0)
+		else if (medal.gold[k] < medal.gold[country_rank])
+			//rank가 금메달이 더 많을때
 		{
-			selver_arr[selver] += 1;
-			s_last = s_last < selver ? selver + 1 : s_last;
-			s_sum++;//rank의 은메달이 0일때를 대비
+			continue;
 		}
-		//gold=<0 그리고 selver<=0일때 실행
-		else if (country[country_member][2] > 0)
+		else if ((medal.gold[k] == medal.gold[country_rank]) && (medal.selver[k] > medal.selver[country_rank]))
+			//k번째 나라의 은메달이 더 많으면 rank나라의 순위는 뒤로 밀려난다.
 		{
-			copper_arr[copper] += 1;
-			c_last = c_last < copper ? copper + 1 : c_last;
-			c_sum++;//rank의 동메달이 0일때를 대비
+			ranking++;
+		}
+		else if (medal.selver[k] < medal.selver[country_rank])
+			//rank가 은메달이 더 많을때
+		{
+			continue;
+		}
+		else if ((medal.selver[k] == medal.selver[country_rank]) && (medal.copper[k] > medal.copper[country_rank]))
+			//k번째 나라의 동메달이 더 많으면 rank나라의 순위는 뒤로 밀려난다.
+		{
+			ranking++;
 		}
 	}
-
-	if (country[rank][0] > 0)
-	{
-		int r_gold = country[rank][0]+1;
-		int gold=1;
-		while (r_gold < g_last)
-		{
-			gold += gold_arr[r_gold];
-
-		}
-		printf("%d", gold);
-	}
-	else if (country[rank][1] > 0)
-	{
-		int r_selver = country[rank][1] + 1;
-		int selver= 1;
-		while (r_selver < s_last)
-		{
-			selver += selver_arr[r_selver];
-
-		}
-		printf("%d", g_sum+selver);
-	}
-	else
-	{
-		int r_copper = country[rank][2] + 1;
-		int copper = 1;
-		if (country[rank][2] == 0)
-		{
-			printf("%d", g_sum + s_sum + c_sum);
-		}
-		else
-		{
-			
-			while (r_copper < c_last)
-			{
-				copper += copper_arr[r_copper];
-
-			}
-			printf("%d", g_sum + s_sum+copper);
-		}
-	}
+	free(medal.gold);
+	free(medal.selver);
+	free(medal.copper);
+	printf("%d", ranking);
+	return 0;
 }
