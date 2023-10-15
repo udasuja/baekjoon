@@ -76,17 +76,24 @@ int main(void)
 						if (student[j + 1][1] == vote[k])
 						{
 							if (number[student[j][0]] < number[student[j + 1][0]])
+							//student[j]에 해당하는 학생의 득표순서가 student[j+1]에 해당하는 학생의 득표순서보다 작으면
+							//더 빨리 받은 것이 된다. 즉 더 오래되었다.
 							{
-								change = number[student[j][0]];
-								number[student[j][0]] = number[student[j + 1][0]];
-								number[student[j + 1][0]] = change;
+								change = student[j][0];
+								student[j][0] = student[j+1][0];
+								student[j + 1][0] = change;
+								
 							}
-							//우변이 더 작으면 우변이 좌변보다 더 오래됬다는 것이다.
 							j++;
+							//이 조건문 후 다음 반복의 조건중 j+1은 j++을 고려하여 (++j)+1이 된다.
 						}
+//오래된 것을 뒤에다가 놓으면서 student[j+1]학생이 k번째 학생보다 득표수가 작아지면(큰 순서대로 배열하므로 클리는 없다.)
+//가장 오래된 것을 k번째 학생이 대체한다.
 						else
 						{
-							student[j][0] = number[k];
+							student[j][0] = k;
+							//student[j]가 k학생과 득표수가 같으며 가장 오랜되 애이므로
+							//애를 k번째 학생으로 대체한다.
 							break;
 						}
 					}
@@ -95,7 +102,6 @@ int main(void)
 			}
 		}
 	}
-	printf("%d %d %d", student[0][0],student[1][0], student[2][0]);
 	//오름차순을 위한 반복문
 	for (int o = 1; o <= student_m; o++)
 	{
