@@ -1,96 +1,117 @@
 /*
-입력:당선인의 수,추천횟수, 학생의 번호
-출력:당선인
+입력: 당선인의 수,투표용지의 수,학생의 번호
 
-득표수가 많은 순서대로 출력하고 만약 같은 경우라면
-늦게 표를 받은 순서대로 출력한다.
-그리고 콘솔 창에서의 출력은 오름차순으로 출력한다.
+출력: 당선인의 번호
 
-비어있는 사진틀이 없을 때에는 표를 가장 적게 받은 애를 지운고
-그 자리에 대체한다. 만약 같은 표를 2명이 받았다면 오래된 애를 지운다.
+일단 두가지 배열을 만들고
+하나는 받은 투표의 수
+하나는 순서를 저장한다.
 
+첫번째 반복문에 투표를 받고 그 순서를 저장한다.
+(같은 득표수라면 오래된 애가 지워진다.)
+두번째 반복문에는 첫번째 반복문을 토대로 당선인을 뽑는다.
+-vote즉 득표수가 0인에가 나오면 continue한다.
+-득표수가 0보다 크면 당선인 배열에 0부터 집어넣는다.
 
+세번째 반복문에는 당선인의 배열을 오름차순으로 설정한다.
 */
-#include <stdio.h>
 
+#include <stdio.h>
 
 int main(void)
 {
-	int ascending[20];//오름차순을 위한 배열
-	int n,picture[20][2] = {0};//사진틀의 개수 20개이하
-	//picture라는 배열의 0번째 열에는 당선자를 1번째 열에는 득표수를 나타낸다.
-	int student;//추천횟수
-	int student_num[100]={0};//학생의 번호
-	//2차원 배열로 0번째 열에는 투표를 받은 횟수를 나타내고
-	int max=0,j=0;
+	int vote[100]={0}, number[100];
+	int student_m=0;//학생 번호의 최대값을 구한다.
+	int student[20][2]={0};//0열에는 학생의 번호를 1열에는 득표수를 넣는다.
+	int n, vote_paper;
 
-	scanf_s("%d %d", &n, &student);
-	for (int i = 0; i < student; i++)
-	//어느 학생이 얼마나 투표받고 어느 순서를 갖는지를 알기 위한 반복문
+	scanf_s("%d %d", &n, &vote_paper);
+	for (int i = 0; i < vote_paper; i++)
 	{
-		int num,pi_k;
+		int num;
 
 		scanf_s("%d", &num);
-		student_num[num]++;//num이라는 번호를 가진 학생의 투표수를 1추가한다.
-		max = max < num ? num : max;
-		for (int k = 0; k < n; k++)
-		{
-			if (picture[k][0] == num)
-				//k번째 요소의 학생이랑 num이라는 학생이랑 같을때
-			{
-				picture[k][1] = student_num[num];
-				//득표수 업데이트
-				break;
-			}
-		}
+		student_m = student_m < num ? num : student_m;
+		//지금 입력받은 학생의 번호가 이전까지의 최대값보다 크면 그것이 학생 번호의 최대값이된다.
 
-		for (int k = 0; k < n; k++)
-		{
-			if (picture[k][0]!=num && picture[k][1] <= student_num[num])
-			//k번째 요소의 학생이 num이라는 학생이랑 다를때 실행
-			//picture당선자의 순서를 나타내는 배열의 k번째 요소의 값보다 num배열의 num번째 요소의 값이 더 클때
-			{
-				for (int x = n - 1; x > k; x--)
-
-				//마지막 요소를 제거하고 순서를 뒤로 밀기위해 x의 값은 마지막요소보다 1만큼 앞선다.
-				//k번째에 num번째 요소의 값을 넣기위해 k보다 클때만 반복하도록 하였다.
-				{
-					pi_k = picture[x][0];//picture라는 배열에 맨 마지막 당선자를 삭제할 것이기에
-					//그 당선자가 받은 표를 0으로 만든다.
-					student_num[pi_k] = 0;
-					picture[x][1] = picture[x - 1][1];
-					//x번째 요소의 값은 그보다 1칸 앞선 요소의 값으로 대체한다.
-					picture[x][0] = picture[x - 1][0];
-				}
-				picture[k][0] = num;//k의 값은 num이라는 학생의 번호가된다.
-				picture[k][1] = student_num[num];
-				//printf("%d %d %d\n", picture[0][0], picture[1][0], picture[2][0]);
-				break;
-			}
-			else if (picture[k][0] == num)
-			//당선자 목록중에 num이라는 학생이 이미 존재하면
-			{
-				break;//반복문을 종료한다.
-			}
-			
-		}
-		
+		vote[num]++;//num이라는 번호를 갖은 학생의 득표수를 1증가시킨다.
+		number[num] = i;//num이 투표를 받은 순서는 i번째가 되고
+		//나중에 다시 받으면 그때 i로 순서가 초기화된다.
 	}
-	for (int i = 0; i <= max; i++)
+	for (int k = 0; k <= student_m; k++)
 	{
-		for (int k = 0; k < n; k++)
+		if (vote[k] == 0)
+		//득표수가 0인 학생이면 그냥 무시한다.
 		{
-			if (picture[k][0] == i)
-				//i는 0부터 최대의 학생번호까지 커지는데
-				//i번째 요소의 학생의 번호가 i라면
+			continue;
+		}
+		else
+		{
+			for (int j = 0; j < n; j++)			
 			{
-				ascending[j] = picture[k][0];
-				printf("%d", ascending[j]);
-				j++;
-				//오름차순으로 배열한다.
+				if (student[j][1] < vote[k])
+					//j번째 당선인의 득표수보다 k번째 학생의 득표수가 더 많은경우
+				{
+					for (int j2 = n - 1; j2 > j; j2--)
+					//student배열의 j번째 요소에 vote배열의 k번째 값을 집어넣어야되므로
+					//뒤로 한칸씩 옮긴다.
+					{
+						student[j2][1] = student[j2 - 1][1];//득표수를 뒤로 한 칸씩 옮긴다.
+						student[j2][0] = student[j2-1][0];//학생의 번호도 뒤로 한 칸씩 옮긴다.
+					}
+					student[j][1] = vote[k];
+					student[j][0] = k;
+					break;
+				}
+				else if(student[j][1] == vote[k])
+				//student배열에 j번째 학생의 득표수가 k번째 학생이랑 일치할때
+				{
+					//j+1번째 학생의 득표수가 k보다 작으면 j번째에 k학생을 쓰고
+					//같으면 다시 j+2번째 학생의 득표수랑 비교한다.
+					while(j<n)
+					//오래된 것을 뒤에다가 배열한다.
+					{
+						int change;
+						//순서가 더 오래된것을 저장한다.
+						if (student[j + 1][1] == vote[k])
+						{
+							if (number[student[j][0]] < number[student[j + 1][0]])
+							{
+								change = number[student[j][0]];
+								number[student[j][0]] = number[student[j + 1][0]];
+								number[student[j + 1][0]] = change;
+							}
+							//우변이 더 작으면 우변이 좌변보다 더 오래됬다는 것이다.
+							j++;
+						}
+						else
+						{
+							student[j][0] = number[k];
+							break;
+						}
+					}
+					
+				}
 			}
 		}
 	}
-
+	printf("%d %d %d", student[0][0],student[1][0], student[2][0]);
+	//오름차순을 위한 반복문
+	for (int o = 1; o <= student_m; o++)
+	{
+		
+		for (int o2 = 0; o2 < n; o2++)
+		{
+			
+			if (student[o2][0] == o)
+			//o가 1부터 학생 번호의 최대값까지 커지는데
+			//
+			//student배열에 o2에 o가 존재하면 그것을 출력한다.
+			{
+				printf("%d", o);
+				break;
+			}
+		}
+	}
 	return 0;
 }
