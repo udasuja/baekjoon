@@ -25,11 +25,12 @@ typedef struct
 	int people;//학생의 번호를 저장한다.
 }STUDENT;
 
+
 int main(void)
 {
 	int n, total;
 	STUDENT st[20] = { 0 };
-
+	int student_max = 0;
 	//처음 입력값은 st배열에 저장하고 투표수와 투표순서 또한 저장한다.
 	//배열의 마지막 요소의 번호는 n-1이 되고 n-1이 될 때까지 입력한 학생의 투표수와 순서를 저장한다.(0부터 n-1까지 차례대로)
 	//만약 n-1까지 다 차면 입력받은 후보와 투표수가 일치하는 것들 중 투표순서가 가장 빠른 것의 자리를 대체한다.
@@ -41,7 +42,7 @@ int main(void)
 	{
 		int student,k;
 		scanf_s("%d", &student);
-
+		student_max = student_max < student ? student : student_max;
 		if (st[n-1].people==0)
 		//st라는 배열의 n-1까지 후보가 가득 차지 않을 경우
 		{
@@ -69,7 +70,7 @@ int main(void)
 				st[zero].people = student;
 				st[zero].vote++;
 				st[zero].number = i;
-			}			
+			}
 		}
 		else
 		//가득 찬 경우
@@ -89,25 +90,40 @@ int main(void)
 			//st배열에 student라는 학생의 번호가 없는 경우
 			//없으면 새로 입력받은 것이기에 득표수는 1일 것이다.
 			{
-				int old=i;//이 변수는 득표수가 1이고 투표번호가 가장 빠른 애를 지우기위해 사용된다.
+				int old_number=i,old;//이 변수는 득표수가 1이고 투표번호가 가장 빠른 애를 지우기위해 사용된다.
 				for (k = 0; k < n; k++)
 				{
-					if ((st[k].vote==1) && (old > st[k].number))
+					if ((st[k].vote==1) && (old_number > st[k].number))
 					//st배열에 k번째 요소의 학생의 득표수가 1이고 투표순서가 old보다 낮으면
 					//그것이 가장 오래된 것이기에 old에 그것을 저장한다.
 					{
 
-						
-						old = k;//투표받은지 가장 오래된 학생을 저장한다. 
+						old_number = st[k].number;//가장오래된 투표순서를 저장
+						old = k;//그 학생을 저장 
 					}
 				}
-				printf("%d;", k);
 				st[old].people = student;
 				st[old].number = i;
-				printf("%d;%d;",old, st[old].people);
+				continue;
+			}
+		}
+
+	}
+
+	for (int i = 1; i <= student_max; i++)
+	//0부터 입력받은 학생의 최대 번호까지 i가 커지고 
+	//st배열의 학생의 번호랑 대조하여 i랑 같으면 출력한다.
+	//i는 0부터 커지므로 오름차순으로 출력가능할 것이다.
+	{
+		for (int k = 0; k < n; k++)
+		{
+			if (st[k].people == i)
+			{
+				printf("%d", st[k].people);
+				break;
 			}
 		}
 	}
-	printf("%d %d %d", st[0].number, st[1].number, st[2].number);
+	
 	return 0;
 }
