@@ -7,7 +7,7 @@
 학생들이 추천을 시작하기 전에 모든 사진틀은 비어있다.
 어떤 학생이 특정 학생을 추천하면, 추천받은 학생의 사진이 반드시 사진틀에 게시되어야 한다.
 비어있는 사진틀이 없는 경우에는 현재까지 추천 받은 횟수가 가장 적은 학생의 사진을 삭제하고,
-그 자리에 새롭게 추천받은 학생의 사진을 게시한다. 
+그 자리에 새롭게 추천받은 학생의 사진을 게시한다.(추천수가 많든 적든 일단 오래된 애는 지운다.)
 이때, 현재까지 추천 받은 횟수가 가장 적은 학생이 두 명 이상일 경우에는
 그러한 학생들 중 게시된 지 가장 오래된 사진을 삭제한다.
 현재 사진이 게시된 학생이 다른 학생의 추천을 받은 경우에는 추천받은 횟수만 증가시킨다.
@@ -46,20 +46,17 @@ int main(void)
 		if (st[n-1].people==0)
 		//st라는 배열의 n-1까지 후보가 가득 차지 않을 경우
 		{
-			int zero;
 			for (k = 0; k < n; k++)
 			{
 				if (st[k].people == student)
 				//st배열에 student라는 번호를 갖은 학생이 존재할 경우
 				{
 					st[k].vote++;
-					st[k].number = i;
 					break;
 				}
 				else if (st[k].people == 0)
 				//st배열에 people 값이 0인 것이 나오면
 				{
-					zero = k;
 					break;
 				}
 			}
@@ -67,9 +64,9 @@ int main(void)
 			//st[k]가 student라면 st배열에 student가 존재하다는 것이고
 			//그것이 아니라면 st배열에는 student라는 학생의 번호가 없다는 것이다.
 			{
-				st[zero].people = student;
-				st[zero].vote++;
-				st[zero].number = i;
+				st[k].people = student;
+				st[k].vote++;
+				st[k].number = i;
 			}
 		}
 		else
@@ -82,7 +79,6 @@ int main(void)
 				//위 조건이 존재하는 경우 k는 n보다 작은 값을 갖는다.
 				{
 					st[k].vote++;
-					st[k].number = i;
 					break;
 				}
 			}
@@ -90,24 +86,35 @@ int main(void)
 			//st배열에 student라는 학생의 번호가 없는 경우
 			//없으면 새로 입력받은 것이기에 득표수는 1일 것이다.
 			{
-				int old_number=i,old;//이 변수는 득표수가 1이고 투표번호가 가장 빠른 애를 지우기위해 사용된다.
-				for (k = 0; k < n; k++)
-				{
-					if ((st[k].vote==1) && (old_number > st[k].number))
-					//st배열에 k번째 요소의 학생의 득표수가 1이고 투표순서가 old보다 낮으면
-					//그것이 가장 오래된 것이기에 old에 그것을 저장한다.
-					{
+				int old=0, old_number=st[0].number, old_vote = st[0].vote;
+				for (k = 1; k < n; k++)
+//st배열을 1부터 n-1까지 살펴봐서 가장 작은 투표수를 받은 학생을 찾는다.
+//그리고 st[k]의 투표수가 가장 작은투표수와 같으면 그 둘중 투표순서가 작은것(오래된 것)을 삭제한다.
 
-						old_number = st[k].number;//가장오래된 투표순서를 저장
-						old = k;//그 학생을 저장 
+				{
+					if (st[k].vote < old_vote)
+					{
+						old = k;
+						old_number = st[k].number;
+						old_vote = st[k].vote;
+					}
+					else if (st[k].vote == old_vote)
+					//투표수가 같을때 득표순서가 작을 것을 없앤다.
+					{
+						if (st[k].number < old_number)
+						{
+							old = k;
+							old_number = st[k].number;
+							old_vote = st[k].vote;							
+						}
+						
 					}
 				}
 				st[old].people = student;
 				st[old].number = i;
-				continue;
+				st[old].vote = 1;
 			}
 		}
-
 	}
 
 	for (int i = 1; i <= student_max; i++)
