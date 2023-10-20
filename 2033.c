@@ -8,69 +8,46 @@ a가 1000보다 크면 100의 자리에서 반올림 이것을 반복한다.
 
 int main(void)
 {
-	int s_arr[8], i = 0;
-	char s;
-	while (1)
+	int a,i=0,num1,first,multiplication=1;
+	scanf_s("%d", &a);
+	if (a > 10)
 	{
-		s = getchar();//숫자를 문자형태로 입력받는다. 
-		if (s == '\n')//만약 엔터키를 입력하면 반복문을 끝낸다.
+		first = a;//first변수는 맨 왼쪽 숫자를 의미한다.
+		do
 		{
-			break;
-		}
-		s_arr[i++] = s;
-		//i값이 문자열의 길이를 알려준다.
-		//ex)345\n고 입력하면 i는 3이라는 값을 갖게된다.
-	}
-	//밑에는 반올림 및 반내림 알고리즘
-	for (int k = i; k > 2; k--)
-	{
-		if ((int)s_arr[k] >= 5)
-		{
-			s_arr[k - 1] = (int)s_arr[k - 1] + 1;
-		}
-		if ((int)s_arr[k - 1] >= 10)
-		{
-			s_arr[k - 2] = (int)s_arr[k - 2] + 1;
-			s_arr[k - 1] = (int)s_arr[k - 1] - 10;
-		}
-	}
+			i++;//i는 a의 맨 왼쪽 수에 10을 몇번 곱했는지를 알려준다.
+			//20이면 i는 1이된다.
+			first /= 10;
+		} while (first >= 10);
 
-	if (i == 1)
-	{
-		s_arr[0] <= '4' ? printf("%d", 0) : printf("%d", 10);
-	}
-	else
-	{
+		//a=20이라면 i는 1이된다.
 
-
-		if (s_arr[1] <= '4')
+		while (i--)//i가 0이면 종료된다.
 		{
-			printf("%d", (int)s_arr[0]);
-			while (--i)
-			{
-				printf("%d", 0);
-			}
+			a += (5 * multiplication);
+			//반올림은 4이하이면 올림수를 안 생기고
+			//5이상이면 올림수가 생긴다.
+			//즉 그 자리수에 맞는 앞숫자가 5인 숫자를 더하면 반올림을 할 수 있다.
+			//반복이 될 때마다 1의 자리수 반올림
+			//10의 자리수 반올림 이런식으로 반올림이 진행된다.
+			multiplication *= 10;
 		}
-		else
+		i = 0;
+		do
 		{
-			if (s_arr[0] == '9')
-			{
-				printf("%d", 1);
-				while (i--)
-				{
-					printf("%d", 0);
-				}
+			i++;
+			a /= 10;
+		} while (a >= 10);
+		//위 반복문으로 a의 맨 왼쪽 숫자를 구한다.
+		//그리고 a의 맨 왼쪽 숫자에 10을 얼마나 곱했는지도 구한다.
+		//그 횟수는 i가 된다.
 
-			}
-			else
-			{
-				printf("%d", (int)((int)s_arr[0] + 1));
-				while (--i)
-				{
-					printf("%d", 0);
-				}
-			}
+		for (int k = 0; k < i; k++)
+		{
+			a *= 10;
 		}
+		//10을 i번 곱하면서 맨 왼쪽숫자 제외하고는 다 0으로 만든다.
+
 	}
-	return 0;
+	printf("%d", a);
 }
