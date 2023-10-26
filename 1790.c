@@ -3,51 +3,44 @@
 10의 자리에 있는 숫자의 개수는 10개로 총 20개의 숫자가 나온다.
 즉 나온 숫자의 개수(=10) * 자리수
 100에서 110까지는 100,101,102,103----109로 총 3*10로 30개의 숫자가 나온다.
+
+n의 최대값은 100,000,000이므로 100000000의 반과 입력된 n를 비교하고 그보다 크면 그 반의 반과 비교
+이런식으로 비교하여 연산을 줄여나간다.
+
 */
 #include <stdio.h>
 
 int main(void)
-{
-	int n, s,k=1;//k는 a에 10을 곱한 횟수가 된다.
-	int i = 1,a=1,number=0;
+{	
+	int n, s;
+	int k = 1,a = 10;//k는 자리수를 의미한다.
+	int value = 1,ten;
+	int number=-1;
+
 	scanf_s("%d %d", &n, &s);
-	while (i <= n)
+	while (1)
 	{
-		int quotient = i / a, remain = i % a;
-		if (quotient == 10)//몫이 10이 되면 자리수가 1개 증가했다는 것이기에
-		//a에 10을 곱해준다.
+		if (s < 10)
 		{
-			a *= 10;
-			k++;
+			return printf("%d", s);
 		}
-		if (number + k >= s)
-		//number=숫자의 번호를 의미 즉 1,2,3,4,라 했을때 3일때의 number는 3이된다.
+		else if (number == -1)
 		{
-			for (int j = 1; j <= k; j++)
+			while (number < s)//number은 기하급수적으로 증가한다.
+				//10부터 99까지의 숫자의 개수를 세고
+				//100부터 999까지의 숫자의 개수를 세고 그것을 계속 number에 더한다.
 			{
-				
-				if (j == k)
-				//j==k이면은 i숫자의 맨끝자리의 수를 출력하라는 의미이기에 나머지 출력
-				{
-					return printf("%d", remain);
-				}
-				else if (number + j == s)
-				{
-					return printf("%d", quotient);
-				}
-				remain = i % a;
-				a /= 10;
-				quotient = remain / a;
+				number += k * a;
+				k++;
+				a *= 10;
 			}
 		}
-		else
-		//위 조건이 아니면 그 숫자내에서는 없는 것이기에 자리수만큼 증가
-		{
-			number += k;
-
-		}
-		i++;
+		//만약 s가 23이면 1부터 99까지의 숫자만을 세고 그만둘 것이다. 즉 23번째 값은 10부터 99사이에 있을 것이다.
+		k--;
+		a /= 10;
+		number -= k * a;//이 연산들을 통해 s번째 숫자가 2자리수라면 number은 9가된다.(즉 1자리수의 개수만 추가하였다.)
+		a /= 10;
+		value = a - 1;
 	}
-	printf("%d", -1);
 	return 0;
 }
