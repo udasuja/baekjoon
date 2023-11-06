@@ -14,51 +14,54 @@ HELLOTHEREeWELLlBEFINEe가 된다.
 int main(void)
 {
 	int textcase;
-	int str = 0, c, fourth = 0;
+	int c,lastnumber=-1;
 	scanf_s("%d", &textcase);
 	c = getchar();
-	//c변수는 textcase에서 저장되지 않는 \n입력을 없애기 위해서이다.
+	//scanf를 이용하여 입력할 때는 마지막에 '\n'가 입력버퍼에 남아있을 텐데 그것을 없애는 역할 
 	while (textcase)
 	{
-		int charater[27] = { 0 };
-		int fal = 0, tru=0,count = 0;
-		do
+		int charater[26] = { 0 };
+		int fal = 0,str=0,compare=0;
+		while (str!='\n')
 		{
 			int number;
 			str = getchar();
 			number = (int)(str - 'A');
-
+			if (compare == str && charater[lastnumber] == -1)
+			//N-1번째의 문자가 3번 입력을 받았을 때 N번째 문자가 그 문자랑 같으면
+			{
+				compare = 0;
+				//비교할 문자을 초기화한다.
+			}
+			else if (charater[lastnumber] == -1)
+			//N-1번째의 문자가 3번 입력을 받았는데 N번째 문자가 그 문자랑 다르면
+			{
+				fal = 1;
+				//fal이 1이면 이 메시지가 거짓이라는 것이다.
+			}
 			if (number >= 0)
+			//입력받은 문자가 대문자일때 널문자라면 number이 음수가 될 것이다.(아스키코드 값이 널문자가 더 작으니)
 			{
 				charater[number] += 1;
-				//알파벳에 해당하는 요소에 1를 추가하여 어떤 알파벳이 입력되었는지 알 수 있다.
+				//그 알파벳이 나오면 1증가한다.
 			}
-			if (count)
+			if (charater[number] == 3)
+			//같은 문자가 3번나오면
 			{
-				if (str == fourth)
-				{
-					tru=1;
-					count = 0;
-					charater[number] = 0;
-				}
-				else
-				{
-					fal = 1;
-				}
+				compare = str;
+				lastnumber = (int)(compare - 'A');
+				charater[number] = -1;
+				//다음 나올 문자가 이번에 나올 문자와 같으면 그 문자가 나온횟수는 0이될 것이다.
+				//charater[number]+=1;에 의해서 
 			}
-			if (charater[number] / 3 == 1)
-			{
-				count = 1;
-				fourth = str;
-			}
-		} while (str != '\n');//입력이 \n(엔터)이라면 반복을 종료한다.
-		if (fal == 0&&tru==1)
-		{
-			printf("OK\n");
 		}
-		else if (fal == 1)
+		if (fal == 1)
 		{
 			printf("FAKE\n");
+		}
+		else
+		{
+			printf("OK\n");
 		}
 		textcase--;
 	}
