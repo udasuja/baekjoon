@@ -33,6 +33,7 @@ int main(void)
 	input(input_row, input_col);//바다와 육지를 입력받는다.
 	printf("\n");
 	sea(input_row, input_col);//가라앉는 바다를 찾는다.
+	//fifth_print(input_row, input_col);
 }
 
 void input(int input_row, int input_col)
@@ -80,10 +81,9 @@ void sea(int input_row, int input_col)
 					}
 					count++;
 				}
-				if (sea_count >= 3 && sea_count <= 4)
+				if (sea_count >= 3 )
 				{
 					fifth_year[i][j] = '.';
-					printf("%c", fifth_year[i][j]);
 					continue;
 				}
 			}
@@ -91,23 +91,6 @@ void sea(int input_row, int input_col)
 			printf("%c", fifth_year[i][j]);
 		}
 		printf("\n");
-
 	}
 }
 
-void fifth_print(int input_row, int input_col)
-
-{
-	MATRIX col, row;
-
-	col.first = row.first = 99;
-	col.last = row.last = -99;
-	for (int i = 1; i <= input_row; i++)
-	{
-		for (int j = 1; j <= input_col; j++)
-		{
-			
-		}
-	}
-
-}
