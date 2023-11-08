@@ -8,23 +8,34 @@ X가 있을때 상하좌우를 확인후 .이나 공백이 4칸이하 3칸이상 있으면 바다라고 출력한
 
 
 #include <stdio.h>
+
+
 char arr[12][12] = { 0 };
 char fifth_year[10][10];
 void input(int, int);
 void sea(int ,int);
+void fifth_print(int,int);
+
+typedef struct
+{
+	int first;
+	int last;
+}MATRIX;
 
 int main(void)
 {
 	int input_row, input_col;
-
+	int c;
 	scanf_s("%d %d", &input_row, &input_col);
+	c = getchar();//scanf는 입력을 받을려면 \n를 사용해야하는데
+	//이 \n는 계속 입력버퍼에 남아있게 된다. 그것을 지워주는 문장이다.
 
 	input(input_row, input_col);//바다와 육지를 입력받는다.
+	printf("\n");
 	sea(input_row, input_col);//가라앉는 바다를 찾는다.
 }
 
 void input(int input_row, int input_col)
-//11 07날 1번째 열이 사라지는 오류가 발생한다.
 {
 	int c;
 	for (int i = 1; i <= input_row; i++)
@@ -47,6 +58,7 @@ void input(int input_row, int input_col)
 	}
 }
 void sea(int input_row, int input_col)
+//50년뒤에 가라앉을 땅과 아닌 땅을 구분하는 함수이다.
 {
 	for (int i = 1; i <= input_row; i++)
 	{
@@ -81,4 +93,21 @@ void sea(int input_row, int input_col)
 		printf("\n");
 
 	}
+}
+
+void fifth_print(int input_row, int input_col)
+
+{
+	MATRIX col, row;
+
+	col.first = row.first = 99;
+	col.last = row.last = -99;
+	for (int i = 1; i <= input_row; i++)
+	{
+		for (int j = 1; j <= input_col; j++)
+		{
+			
+		}
+	}
+
 }
