@@ -10,7 +10,7 @@ X가 있을때 상하좌우를 확인후 .이나 공백이 4칸이하 3칸이상 있으면 바다라고 출력한
 #include <stdio.h>
 
 
-char arr[12][12] = { 0 };
+int arr[12][12] = { 0 };
 char fifth_year[10][10];
 void input(int, int);
 void sea(int ,int);
@@ -31,9 +31,9 @@ int main(void)
 	//이 \n는 계속 입력버퍼에 남아있게 된다. 그것을 지워주는 문장이다.
 
 	input(input_row, input_col);//바다와 육지를 입력받는다.
-	printf("\n");
 	sea(input_row, input_col);//가라앉는 바다를 찾는다.
-	//fifth_print(input_row, input_col);
+	fifth_print(input_row, input_col);
+	
 }
 
 void input(int input_row, int input_col)
@@ -58,17 +58,18 @@ void input(int input_row, int input_col)
 
 	}
 }
+
 void sea(int input_row, int input_col)
 //50년뒤에 가라앉을 땅과 아닌 땅을 구분하는 함수이다.
 {
 	for (int i = 1; i <= input_row; i++)
 	{
-		int count=-1;
 		for (int j = 1; j <= input_col; j++)
 		{
 			if (arr[i][j] == 'X')
 			{
 				int sea_count = 0;
+				int count = -1;
 				while (count < 2)
 				{
 					if (arr[i][j + count] == '.' || arr[i][j + count] == '\n' || arr[i][j + count] == 0)
@@ -83,14 +84,42 @@ void sea(int input_row, int input_col)
 				}
 				if (sea_count >= 3 )
 				{
+
 					fifth_year[i][j] = '.';
 					continue;
 				}
 			}
 			fifth_year[i][j] = arr[i][j];
-			printf("%c", fifth_year[i][j]);
 		}
-		printf("\n");
 	}
 }
 
+void fifth_print(int input_row, int input_col)
+{
+	MATRIX col,row;
+
+	col.first = row.first = 99;
+	col.last = row.last = -99;
+
+	for (int i = 1; i <= input_row; i++)
+	{
+		for (int j = 1; j <= input_col; j++)
+		{
+			if (fifth_year[i][j] == 'X')
+			{
+				col.first = col.first > j ? j : col.first;
+				col.last = col.last < j ? j : col.last;
+				row.first = row.first > i ? i : row.first;
+				row.last = row.last < i ? i : row.last;
+			}
+		}
+	}
+
+	for (int r = row.first; r <= row.last; r++)
+	{
+		for (int c = col.first; c <= col.last; c++)
+		{
+			printf("%c", fifth_year[r][c]);
+		}
+	}
+}
