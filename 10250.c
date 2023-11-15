@@ -20,11 +20,26 @@ int main(void)
 
 	scanf_s("%d", &textcase);
 	while (textcase--)
+//textcase만큼 반복
 	{
 		int weight, hight;
 		int costomer;
+		int i, k;
+
 		scanf_s("%d %d %d", &weight, &hight,&costomer);
-		
+		for (i = 0; i < hight && costomer; i++)
+		//열의 맨 마지막+1에는 반복이 종료가되고 costomer이 0이 되면 i++후에 반복조건 돌리고 반복이 종료된다.
+		{
+			for (k = 0; k < weight && costomer; k++)
+			//행의 맨 마지막+1에는 반복이 종료가 되고 costomer이 0이 되면 k++후에 반복조건 돌리고 반복이 종료된다.
+			{
+				costomer--;
+				//행이 1증가한다는 것은 방을 가진 손님이 1개씩 줄어든다는 의미이고
+				//costomer이 0이 되는 것은 costomer번째 손님도 방을 가졌다는 의미이다.
+			}
+		}
+		printf("%d\n", (k * 100) + i);
+		//k는 층을 의미 i는 그 층에서의 방을 의미
 	}
 	return 0;
 }
