@@ -10,7 +10,67 @@
 입력:첫째줄=>수열의 크기
 	 둘째줄=> 수열
 
-수열의 크기가 짝수인지 홀수 인지를 구분하고 짝수면 n/2포함해서 왼쪽으로 갈 수록 커지는 지를 확인하고
-n/2을 포함해서 오른쪽으로 갈 수록 작아지는 지를 확인한다.
-홀수면 n+1/2을 기준으로 오른쪽으로 갈 수록 작아지는지 왼쪽으로 갈 수록 커지는 지를 확인한다.
+수열을 왼쪽부터 오른쪽으로 순서대로 검사했을 때 가장 큰 수를 찾고 그 수 값이 같고 다른 위치에 있으면 그 위치를 저장한다.
+그 큰 수를 기준으로 왼쪽 오른쪽으로 각각 n-1번보다 작은수를 찾고 못찾겠으면 길이를 세는 것을 그만둔다.
+그리고 길이 중 가장 큰 값이 출력된다.
+이때 수열의 규칙성도 부합해야된다. ("12월 06일"에는 이 규칙성을 부합하지 못하였다.)
 */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define max(a,b) ((a>b)?a:b)
+
+
+int main(void)
+{
+	int n, i = 0, max_num = 0, max1 = 0, max2 = 0;
+	int* arr;
+
+	scanf_s("%d", &n);
+	arr = (int*)malloc(sizeof(int) * n);
+	while (i < n)
+	{
+		scanf_s("%d", &arr[i++]);
+		max1 = max(arr[i - 1], max1);
+	}
+
+	while (i--)
+	{
+		int lengh = 1;
+		if (max1 == arr[i])
+		{
+			int left = i - 1, right = i + 1;
+			int l_check = i, r_check = i;
+			int end[2] = { 0 };
+			while (1)
+			{
+				if ((left>=0)&&(arr[left] < arr[l_check]))
+				{
+					l_check = left;
+					lengh++;
+				}
+				else if (left < 0)
+				{
+					end[0]++;
+				}
+				if ((right < n) && (arr[right] < arr[r_check]))
+				{
+					r_check = right;
+					lengh++;
+				}
+				else if (right > n)
+				{
+					end[1]++;
+				}
+				if (end[0] && end[1])
+					break;
+				right++;
+				left--;
+			}
+		}
+		max2 = max(lengh, max2);
+	}
+	printf("%d", max2);
+	free(arr);
+	return 0;
+}
