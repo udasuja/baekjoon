@@ -10,67 +10,98 @@
 입력:첫째줄=>수열의 크기
 	 둘째줄=> 수열
 
-수열을 왼쪽부터 오른쪽으로 순서대로 검사했을 때 가장 큰 수를 찾고 그 수 값이 같고 다른 위치에 있으면 그 위치를 저장한다.
-그 큰 수를 기준으로 왼쪽 오른쪽으로 각각 n-1번보다 작은수를 찾고 못찾겠으면 길이를 세는 것을 그만둔다.
-그리고 길이 중 가장 큰 값이 출력된다.
-이때 수열의 규칙성도 부합해야된다. ("12월 06일"에는 이 규칙성을 부합하지 못하였다.)
-*/
+숫자를 입력받고
+가장 큰 수의 수열의 길이를 젠다
+왼쪽이나 오른쪽으로 갈때 기준이 되는 숫자보다 작으며 그 중에서 가장 큰 값을 찾고 큰 값이 두개면 기준이 되는 숫자와 가까운 숫자의 길이를 젠다
+그리고 기준이 되는 숫자를 방금 찾은 그 숫자로 대체한다 다시 윗부분을 반복해 왼쪽으로는 
+배열 요소가 0이 될때까지 오른쪽으로는 배열 요소가 n-1이 되도록 한다 또는 왼쩍 오른쪽 모두 최소값을 다 찾은 경우에 길이를 제는 것을 종료
+틀린이유=> 입력:(7, 1 6 7 2 3 4 5) 답 :4 내 프로그램: 5출력 
 
+*/
 #include <stdio.h>
 #include <stdlib.h>
-#define max(a,b) ((a>b)?a:b)
+#define max(a,b) a>b?a:b
 
+int L_check(int, int*,int);//왼쪽만 검사한다.(이때 함수에 arr배열 이름에 해당하는 주소값을 줘서 함수내에서도 arr배열을 이용할 수 있도록 한다.)
+int R_check(int, int*,int,int);//오른쪽만 검사한다.
 
 int main(void)
 {
-	int n, i = 0, max_num = 0, max1 = 0, max2 = 0;
+	int n, i, max1 = 0, max2 = 0;
 	int* arr;
 
 	scanf_s("%d", &n);
 	arr = (int*)malloc(sizeof(int) * n);
-	while (i < n)
+	for (i = 0; i < n; i++)
 	{
-		scanf_s("%d", &arr[i++]);
-		max1 = max(arr[i - 1], max1);
+		scanf_s("%d", &arr[i]);
+		max1 = max(max1, arr[i]);
 	}
-
-	while (i--)
+	for (i = 0; i < n; i++)
 	{
 		int lengh = 1;
 		if (max1 == arr[i])
 		{
-			int left = i - 1, right = i + 1;
-			int l_check = i, r_check = i;
-			int end[2] = { 0 };
-			while (1)
-			{
-				if ((left>=0)&&(arr[left] < arr[l_check]))
-				{
-					l_check = left;
-					lengh++;
-				}
-				else if (left < 0)
-				{
-					end[0]++;
-				}
-				if ((right < n) && (arr[right] < arr[r_check]))
-				{
-					r_check = right;
-					lengh++;
-				}
-				else if (right > n)
-				{
-					end[1]++;
-				}
-				if (end[0] && end[1])
-					break;
-				right++;
-				left--;
-			}
+			lengh += L_check(max1, arr, i);
+			lengh += R_check(max1, arr, i,n);
 		}
-		max2 = max(lengh, max2);
+		max2 = max(max2, lengh);
 	}
 	printf("%d", max2);
-	free(arr);
-	return 0;
+}
+
+int L_check(int max_l, int* arr,int i)
+{
+	int k,num=0,element=0,lengh=0;
+	int num1 = 0;
+	int left = i;
+	while (1)
+	{
+		for (k = left-1; k >= 0; k--)
+		{
+			num = arr[k] < max_l ? max(arr[k], num) : num;//max_l(기준이 되는 숫자)보다 작으면서 기준이 되는 숫자를 제외하고 가장 큰 수
+			element = num == arr[k]&&arr[k] != arr[element] ? k : element;//그리고 max로 계산 했을 때num보다 arr[k]값이 크면 num==arr[k]이 되므로 element에 k를 집어넣는다.
+		}
+		if (num1!=0 && left == element)
+		{
+			break;
+		}
+		else
+		{
+			max_l = num;
+			left = element;
+			num = element = 0;
+			num1 = 1;
+			lengh++;
+		}
+	}
+	return lengh;
+}
+int R_check(int max_r, int* arr, int i,int n)
+{
+	int k, num = 0, element = 0, lengh = 0;
+	int num1 = 0;
+	int right = i;
+	while (1)
+	{
+		for (k = right + 1; k<n; k++)
+		{
+			num = arr[k] < max_r ? max(arr[k], num) : num;//max_r(기준이 되는 숫자)보다 작으면서 기준이 되는 숫자를 제외하고 가장 큰 수
+			element = num == arr[k]&& arr[k]!=arr[element] ? k : element;//그리고 max로 계산 했을 때num보다 arr[k]값이 크면 num==arr[k]이 되므로 element에 k를 집어넣는다.
+			//arr[k]!=arr[element]는 arr[k]최대값으로 되었을때 전의 최대값은 arr[element]와 같으면 먼저 나온 것을 저장하기 위해서 쓴 코드다.
+		}
+		if (num1 != 0 && right == element)
+		{
+			break;
+		}
+		else
+		{
+			max_r = num;
+			right = element;
+			num = element = 0;
+			num1 = 1;
+			lengh++;
+		}
+	}
+	return lengh;
 }
