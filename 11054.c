@@ -11,7 +11,7 @@
 	 둘째줄=> 수열
 
 숫자를 입력받고
-가장 큰 수의 수열의 길이를 젠다
+모든 숫자를 검사한다.
 왼쪽이나 오른쪽으로 갈때 기준이 되는 숫자보다 작으며 그 중에서 가장 큰 값을 찾고 큰 값이 두개면 기준이 되는 숫자와 가까운 숫자의 길이를 젠다
 그리고 기준이 되는 숫자를 방금 찾은 그 숫자로 대체한다 다시 윗부분을 반복해 왼쪽으로는 
 배열 요소가 0이 될때까지 오른쪽으로는 배열 요소가 n-1이 되도록 한다 또는 왼쩍 오른쪽 모두 최소값을 다 찾은 경우에 길이를 제는 것을 종료
@@ -35,19 +35,18 @@ int main(void)
 	for (i = 0; i < n; i++)
 	{
 		scanf_s("%d", &arr[i]);
-		max1 = max(max1, arr[i]);
 	}
 	for (i = 0; i < n; i++)
 	{
 		int lengh = 1;
-		if (max1 == arr[i])
-		{
-			lengh += L_check(max1, arr, i);
-			lengh += R_check(max1, arr, i,n);
-		}
+		lengh += L_check(arr[i], arr, i);
+		printf("<=left\n");
+		lengh += R_check(arr[i], arr, i, n);
+		printf("<=right\n");
+		
 		max2 = max(max2, lengh);
 	}
-	printf("%d", max2);
+	printf("\n%d", max2);
 }
 
 int L_check(int max_l, int* arr,int i)
@@ -62,15 +61,17 @@ int L_check(int max_l, int* arr,int i)
 			num = arr[k] < max_l ? max(arr[k], num) : num;//max_l(기준이 되는 숫자)보다 작으면서 기준이 되는 숫자를 제외하고 가장 큰 수
 			element = num == arr[k]&&arr[k] != arr[element] ? k : element;//그리고 max로 계산 했을 때num보다 arr[k]값이 크면 num==arr[k]이 되므로 element에 k를 집어넣는다.
 		}
-		if (num1!=0 && left == element)
+		if ((num1!=0 && left == element)||num==0)
 		{
 			break;
 		}
 		else
 		{
+
+			printf("%d", num);
 			max_l = num;
 			left = element;
-			num = element = 0;
+			num =  0;
 			num1 = 1;
 			lengh++;
 		}
@@ -90,15 +91,16 @@ int R_check(int max_r, int* arr, int i,int n)
 			element = num == arr[k]&& arr[k]!=arr[element] ? k : element;//그리고 max로 계산 했을 때num보다 arr[k]값이 크면 num==arr[k]이 되므로 element에 k를 집어넣는다.
 			//arr[k]!=arr[element]는 arr[k]최대값으로 되었을때 전의 최대값은 arr[element]와 같으면 먼저 나온 것을 저장하기 위해서 쓴 코드다.
 		}
-		if (num1 != 0 && right == element)
+		if ((num1 != 0 && right == element)||num==0)
 		{
 			break;
 		}
 		else
-		{
+		{	
+			printf("%d", num);
 			max_r = num;
 			right = element;
-			num = element = 0;
+			num = 0;
 			num1 = 1;
 			lengh++;
 		}
