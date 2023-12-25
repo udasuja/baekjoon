@@ -1,42 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define NUMBER 1000000
 
-void select(int* arr,int);
+int compare(const void* a, const void* b)
+{
+	if (*(int*)a > *(int*)b)
+	{
+		return 1;
+	}
+	else if (*(int*)a < *(int*)b)
+		return -1;
+	else
+		return 0;
+}
 
 int main(void)
 {
 	int n, i;
-	int* arr;
+	int arr[1000000]={0};
 
 	scanf_s("%d", &n);
-	arr = (int*)malloc(sizeof(int) * n);
 	for (i = 0; i < n; i++)
 	{
 		scanf_s("%d", &arr[i]);
 	}
-	select(arr, n);
+
+	qsort(arr, (sizeof(arr) - sizeof(int) * n) / sizeof(int), sizeof(int), compare);
 	for (i = 0; i < n; i++)
 	{
-		printf("%d\n", arr[i]);
+		printf("%d ", arr[i]);
 	}
 	return 0;
-}
-
-void select(int* arr,int n)
-{
-	int i, k;
-
-	for (i = 0; i < n; i++)
-	{
-		int temp = i, swap = arr[i];
-		for (k = i; k < n; k++)
-		{
-			if (arr[temp] > arr[k])
-			{
-				temp = k;
-			}
-		}
-		arr[i] = arr[temp];
-		arr[temp] = swap;
-	}
 }
