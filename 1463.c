@@ -1,5 +1,6 @@
 /*
 연산수를 줄일려면 3으로 최대한 나누는 것이 중요하다.
+			아니면 n 또는 n-1가 2의 거듭제곱으로 되었을 경우에는 2로만 나눈다.<=이것을 못 풀었다.
 1을 빼서 3의 약수를 만들 수 있을 때에는 1을 빼고 
 2를 빼야지만 3의 약수가 되는 경우는 2로 나누거나 1을 빼서 2의 약수로 만들어서 나눈다.
 즉 순서는 3의 약수인가?
@@ -14,13 +15,12 @@ void cycle(int,int*);
 
 int main(void)
 {
-	while (1)
-	{
-		int n, sum = 0;
-		scanf_s("%d", &n);
-		cycle(n, &sum);
-		printf("%d", sum);
-	}
+	
+	int n, sum = 0;
+	scanf_s("%d", &n);
+	cycle(n, &sum);
+	printf("%d", sum);
+	
 	return 0;
 }
 
