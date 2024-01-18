@@ -10,7 +10,6 @@ count가 가장 큰 애를 출력, 같으면 번호가 작은 애를 출력.
 */
 #include <stdio.h>
 //구조체 변수와 student_count함수의 compare에 malloc함수를 사용했더니 메모리 부족 현상이 나왔다.
-#define MAX(a,b) a>b?a:b
 
 typedef struct
 {
@@ -47,26 +46,19 @@ int main(void)
 
 void student_count(STU* student, int n)//1번 학생부터 1학년부터 5학년중 같은 반인 애가 있는지 검사하고 그다음 2번 이런식으로 올라간다.
 {
-	int i, k, index = 0;
-	while (index < n)
+	int i, k, j;
+	for (i = 0; i < n; i++)//대상자
 	{
-		int compare[1000] = { 0 };//같은 반이 된 학생을 중복되어 셈하지 않는다.
-		int start = 0;
-		for (i = 0; i < 5; i++)//1학년부터 5학년까지
+		for (k = 0; k < n; k++)//피대상자
 		{
-			for (k = start; k < n; k++)//1번부터 n번까지 index번과 검사하여 서로 같으면 index count에 1추가한다.
+			for (j = 0; j < 5; j++)//학년
 			{
-				if (k != index && student[k].stu[i] == student[index].stu[i] && compare[k] != 1)
-					//k==index일때는 무조건 count가 1추가되므로 k!=index일 때와
-					//student[k].stu[i] == student[index].stu[i]=>index번째 학생과 k번째 학생이 i학년일 때 같은반이고
-					//compare배열의 k번째 요소가 1이 아니면 조건문 실행
+				if (student[i].stu[j] == student[k].stu[j])//대상자와 피대상자의 반 배정이 같을 때가 있으면 실행
 				{
-					student[index].count += 1;
-					compare[k] = 1;
-
+					student[i].count++;
+					break;//k번째 학생은 j학년때 같은 반이었으므로 중복되어 검사가 진행되지 않도록 k번째 학생과의 겹치는 반을 찾는 것을 그만둔다.
 				}
 			}
 		}
-		index++;
 	}
 }
