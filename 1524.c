@@ -19,38 +19,106 @@
 세준이가 이기면 S를 세비가 이기면 B를 둘다 아닐 경우에는 C를 출력한다.
 
 풀이:
-세비의 병사를 arr_s.soldier에 저장하고 그들의 힘을 arr_s.power에 저장한다.
-세준의 병사를 arr_j.soldier에 저장하고 그들의 힘을 arr_j.power에 저장한다.
+세준의 병사의 힘을 저장한다.
+세비의 병사의 힘을 저장한다.
 각각의 병사 중 가장 작은 힘을 갖은 병사 한 명을 뽑고 그 둘을 비교하여 가장 작은 힘을 갖은 병사를 죽인다.
 같으면 세비의 병사를 죽인다.
 둘 중의 병사가 1만 남을 때까지 반복한다.
-*/
-#include <stdio.h>
-#define MIN(a,b) a>b?b:a
-#define NAME 1000000
 
-typedef struct
+구현:
+구조체
 {
-	int soldier;
-	long power;
-}WAR;
+	병사의 힘(char형 배열)
+}
+
+int main
+{
+	세준의 병사, 세빈의 병사
+	세준의 병사와 세빈의 병사들의 각각의 힘을 입력받는다.
+	각각의 병사들을 퀵 정렬을 통해 정렬한다.
+	0번째 요소부터 비교하여 숫자가 작은 애를 죽이고
+	살아남은 0번째 요소와 죽은 후 다음 숫자를 지닌 애와 비교하여 죽을지 살지를 결정한다.
+	마지막 요소의 다다를 때까지 반복한다.
+}
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int compare(const void* a, const void* b)
+{
+	int num1 = *(int*)a;
+	int num2 = *(int*)b;
+	if (num1 < num2)
+	{
+		return -1;
+	}
+	else if (num1 > num2)
+	{
+		return 1;
+	}
+	else
+		return 0;
+}
+
+void war(int*, int*,int ,int);
 
 int main(void)
 {
-	WAR arr_s[NAME], arr_j[NAME];
-	int t;
+	//int* bin, * jun;
+	int t,i;
 
 	scanf_s("%d", &t);
-	while (t--)
+
+	for(i=0;i<t;i++)		
 	{
-		int i, j;
-		long min_j = 1000000000;
-		printf("%ld", min_j);
-		scanf_s("%d %d", &arr_j[t].soldier, &arr_s[t].soldier);//앞에서부터 각각 세준,세빈을 의미
-		for (i = 0; i < arr_j; i++)
+		int bin_num, jun_num,n;
+		scanf_s("%d %d", &jun_num,&bin_num);
+		int *bin = (int*)malloc(sizeof(int) * bin_num);
+		int *jun = (int*)malloc(sizeof(int) * jun_num);
+		for (n = 0; n < jun_num; n++)
 		{
-			scanf_s("%ld", &arr_j[t].power);
-			min_j = MIN(arr_j[t].power, min_j);
+			scanf_s("%d", &jun[n]);
 		}
+		for (n = 0; n < bin_num; n++)
+		{
+			scanf_s("%d", &bin[n]);
+		}
+		qsort(jun, sizeof(jun) / sizeof(int), sizeof(int), compare);
+		qsort(bin, sizeof(bin) / sizeof(int), sizeof(int), compare);
+		war(jun, bin,jun_num,bin_num);
+	}
+
+}
+
+void war(int* jun, int* bin,int jun_num,int bin_num)
+{
+	int b, j;
+	for (b = j = 0; b < bin_num && j < jun_num;)
+	{
+		if (jun[j] > bin[b])
+		{
+			b++;
+		}
+		else if (jun[j] < bin[b])//세준의 팀원이 약하면 세준의 팀원이 죽는다.
+		{
+			j++;
+		}
+		else//서로 같으면 세비의 팀원이 죽는다.
+		{
+			b++;
+		}
+	}
+	if (j > b)//j>b인 경우는 세준의 팀원이 더 많이 죽었다는 것을 의미한다.
+	{
+		printf("B\n");//세비의 승
+	}
+	else if (j < b)
+	{
+		printf("S\n");
+	}
+	else
+	{
+		printf("C\n");
 	}
 }
