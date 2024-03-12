@@ -84,6 +84,18 @@ int main(void)
 		{
 			scanf_s("%d", &bin[n]);
 		}
+		if (!bin_num)
+		{
+			printf("S\n");
+			i++;
+			continue;
+		}
+		else if (!jun_num)
+		{
+			printf("B\n");
+			i++;
+			continue;
+		}
 		qsort(jun, sizeof(jun) / sizeof(int), sizeof(int), compare);
 		qsort(bin, sizeof(bin) / sizeof(int), sizeof(int), compare);
 		war(jun, bin,jun_num,bin_num);
@@ -116,9 +128,5 @@ void war(int* jun, int* bin,int jun_num,int bin_num)
 	else if (j < b)
 	{
 		printf("S\n");
-	}
-	else
-	{
-		printf("C\n");
 	}
 }
