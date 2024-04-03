@@ -121,12 +121,12 @@ void war(int* jun, int* bin,int jun_num,int bin_num)
 			b++;
 		}
 	}
-	if (j > b)//j>b인 경우는 세준의 팀원이 더 많이 죽었다는 것을 의미한다.
-	{
-		printf("B\n");//세비의 승
-	}
-	else if (j < b)
+	if ((jun_num - j) > (bin_num - b))//살아남은 병사가 세준이 더 많은 경우
 	{
 		printf("S\n");
+	}
+	else if ((jun_num - j) < (bin_num - b))//살아남은 병사가 세비가 더 많은 경우
+	{
+		printf("B\n");
 	}
 }
