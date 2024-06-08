@@ -23,8 +23,8 @@
  * 1
  * 8
  *
- * 가장 간단한 알고리즘은 1부터 순서대로 나눠보는 것이다. 
- * 그리고 나머지가 0이 아니고 나머지가 서로 다른 m를 출력하면 끝(하지만 너무 오래걸림)
+ * n개의 수를 어떤 같은 수로 나눴을때 서로 다른 나머지를 갖기 위해서는 나누는 수는 n+1이상이 되어야한다.
+ * (나머지가 0인 경우를 제외)
  */
 #include <stdio.h>
 
@@ -35,14 +35,36 @@ int main(void)
 
 	while(n--)
 	{
-		int s,i;
-		int arr[300];
+		int s,i,num;
+		int arr[300]={0};
 		scanf("%d",&s);
 		for(i=0;i<s;i++)
 		{
 			scanf("%d",&arr[i]);
 		}
+		num=s;
+		while(num)
+		{	
+			int stop=1;
+			int compare[300]={0};
+			for(i=0;i<s;i++)
+			{
+				if(!compare[arr[i]%num])
+					compare[arr[i]%num]=1;
+				else
+				{
+					stop=0;
+					break;
+				}
+			}
+			if(stop)
+				break;
+			num++;
+		}
+		printf("%d\n",num);
+		
 	}
+	return 0;
 }
 		
 
