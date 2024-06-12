@@ -25,8 +25,13 @@
  *
  * n개의 수를 어떤 같은 수로 나눴을때 서로 다른 나머지를 갖기 위해서는 나누는 수는 n+1이상이 되어야한다.
  * (나머지가 0인 경우를 제외)
+ * 동적메모리 할당을 안 한 경우 compare[1000000]={0};와 같이 코딩하면 시간초과가 나오는 이유:
+ * 시간 초과 문제가 발생하는 이유는 compare 배열의 크기와 초기화 방식 때문입니다. 
+ * compare 배열의 크기를 매우 크게 설정한 경우(예: 1000000) 메모리 초기화 및 접근 시간이 많이 소요됩니다.
+ * 그렇기에 동적메모리 할당하여 시간초과를 최대한 억제하였다.
  */
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(void)
 {
@@ -36,8 +41,9 @@ int main(void)
 	while(n--)
 	{
 		int s,i,num;
-		int arr[300]={0};
+		int *compare;
 		scanf("%d",&s);
+		int *arr=(int*)malloc(sizeof(int)*s);
 		for(i=0;i<s;i++)
 		{
 			scanf("%d",&arr[i]);
@@ -45,22 +51,27 @@ int main(void)
 		num=s;
 		while(num)
 		{	
-			int stop=1;
-			int compare[300]={0};
+			int stop=1;//stop이 1이면 모든 자연수를 num으로 나눴을 때 나머지가 중복되지 않음
+			compare=(int*)calloc(num,sizeof(int));//num개의 배열 저장공간을 할당하고
+							      //calloc으로 그 저장공간을 0으로 초기화
 			for(i=0;i<s;i++)
 			{
-				if(!compare[arr[i]%num])
-					compare[arr[i]%num]=1;
+				int element=arr[i]%num;
+				if(!compare[element])//나머지가 중복되지 않으면 조건문 실행
+					compare[element]=1;//element에 해당하는 나머지가 존재한다는 의미
 				else
 				{
 					stop=0;
 					break;
 				}
 			}
-			if(stop)
+			free(compare);//어차피 compare이라는 나머지 비교 배열은 
+				      //위 반복문에서만 쓰이기에 메모리 할당 해제
+			if(stop)//중복된 것이 없으면 while반복문 종료
 				break;
-			num++;
+			num++;//중복된 것이 있으면 num을 1증가시키고 다시 반복문 실행
 		}
+		free(arr);
 		printf("%d\n",num);
 		
 	}
