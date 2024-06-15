@@ -25,26 +25,38 @@
  * 5//경우의 수 5
  * 67863915//경우의 수 67863915
  *
- * 
+ * 즉 m개의 사이트 중 m-n개의 공백을 지정해주면 된다.
+ * mCn를 구해주면 된다.
  */
 
 #include <stdio.h>
 
 int main(void)
 {
-	int t,n,m;
+	int t;
 	scanf("%d",&t);
 	while(t--)
 	{
-		int i;
-		long product=1;
+		int i,n,m,k;
+		long long pro;//각각 분모와 분자를 의미
 	
 		scanf("%d %d",&n,&m);
-		for(i=1;i<=n;i++)
+		for(i=m,k=m-n;i>n&&k>m-n;i--,k--)
 		{
-			product*=(m-(i-1))-(n-i);
+			if(i>n&&k>m-n)//분자에도 뭔갈 곱해야되고 분모에도 곱할게 있는 경우
+			{
+				pro*=i/k;
+			}
+			else if(i>n&&k<m-n)//분모에만 곱할게 있는 경우
+			{
+				pro*=i;
+			}
+			else if(i<n&&k>m-n)//분자에만 곱할게 있는 경우
+			{
+				pro/=k;
+			}
 		}
-		printf("%ld\n",product);
+		printf("%lld\n",pro);
 	}
 	return 0;
 }
