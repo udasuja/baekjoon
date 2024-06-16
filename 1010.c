@@ -39,36 +39,18 @@ int main(void)
 	while(t--)
 	{
 		int i,n,m,k;
-		unsigned long long fac_m=1,fac_n=1;//각각 m!와 n!를 의미
+		unsigned long long fac_m=1;//각각 m!와 n!를 의미
 
 		scanf("%d %d",&n,&m);
-		if(n<m-n)//n!보다 (m-n)!이 더 클때는 (m-n)!를 m!과 약분한다.
+		if(n>m-n)//n!이 (m-n)!보다 크면 m!를 n!으로 나눔
+			n=m-n;//즉 분자에는(m-n)! 밖에 없는 것을 의미
+		for(i=0;i<n;i++)
 		{
-			for(i=m,k=n;i>(m-n)&&k>=1;)//m!/n!*(m-n)!를 계산하는 것인데 m!에는 (m-n)!이 들어있으므로
-						  //m!를 (m-n)!으로 나누면 m*(m-1)*...*(m-n+1)이 된다.
-			{
-				fac_m*=i;
-				fac_n*=k;
-				if(i>(m-n))
-					i--;
-				if(k>1)
-					k--;
-		
-			}
-		}	
-		else //그게 아니면 m!를 n!으로 나눈다.
-		{
-			for(i=m,k=m-n;i>n&&k>=1;)
-			{
-				fac_m*=i;
-				fac_n*=k;
-				if(i>n)
-					i--;
-				if(k>1)
-					k--;
-			}
-		}	
-		printf("%llu\n",fac_m/fac_n);
+			fac_m*=(m-i);//m-i로 n! 혹은 (m-n)!으로 나누어진 m!을 구현
+			fac_m/=(i+1);//어차피 i는 n까지 감으로 i+1로 n!을 구현
+		}
+
+		printf("%llu\n",fac_m);
 	}
 	return 0;
 }
