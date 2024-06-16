@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 
+
 int main(void)
 {
 	int t;
@@ -38,25 +39,36 @@ int main(void)
 	while(t--)
 	{
 		int i,n,m,k;
-		long long pro;//각각 분모와 분자를 의미
-	
+		unsigned long long fac_m=1,fac_n=1;//각각 m!와 n!를 의미
+
 		scanf("%d %d",&n,&m);
-		for(i=m,k=m-n;i>n&&k>m-n;i--,k--)
+		if(n<m-n)//n!보다 (m-n)!이 더 클때는 (m-n)!를 m!과 약분한다.
 		{
-			if(i>n&&k>m-n)//분자에도 뭔갈 곱해야되고 분모에도 곱할게 있는 경우
+			for(i=m,k=n;i>(m-n)&&k>=1;)//m!/n!*(m-n)!를 계산하는 것인데 m!에는 (m-n)!이 들어있으므로
+						  //m!를 (m-n)!으로 나누면 m*(m-1)*...*(m-n+1)이 된다.
 			{
-				pro*=i/k;
+				fac_m*=i;
+				fac_n*=k;
+				if(i>(m-n))
+					i--;
+				if(k>1)
+					k--;
+		
 			}
-			else if(i>n&&k<m-n)//분모에만 곱할게 있는 경우
+		}	
+		else //그게 아니면 m!를 n!으로 나눈다.
+		{
+			for(i=m,k=m-n;i>n&&k>=1;)
 			{
-				pro*=i;
+				fac_m*=i;
+				fac_n*=k;
+				if(i>n)
+					i--;
+				if(k>1)
+					k--;
 			}
-			else if(i<n&&k>m-n)//분자에만 곱할게 있는 경우
-			{
-				pro/=k;
-			}
-		}
-		printf("%lld\n",pro);
+		}	
+		printf("%llu\n",fac_m/fac_n);
 	}
 	return 0;
 }
