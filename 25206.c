@@ -48,25 +48,19 @@ int main(void)
 		{
 			case 'A':
 				sum+=(rank[1]=='+')?4.5*grade:4.0*grade;
-				sum_gra+=grade;
 				break;
 			case 'B':
 				sum+=(rank[1]=='+')?3.5*grade:3.0*grade;
-				sum_gra+=grade;
 				break;
 			case 'C':
 				sum+=(rank[1]=='+')?2.5*grade:2.0*grade;
-				sum_gra+=grade;
 				break;
 			case 'D':
 				sum+=(rank[1]=='+')?1.5*grade:1.0*grade;
-				sum_gra+=grade;
 				break;
-			case 'F':
-				sum_gra+=grade;
-				break;
-
 		}
+		if (rank[0] != 'P')
+			sum_gra += grade;
 	}
 	printf("%.6lf\n",sum/sum_gra);
 }
