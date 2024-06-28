@@ -17,48 +17,37 @@
  * 0
  *
  * algorithm:
- * n!을 구하는 함수를 구현
- * 	int fac(int n)
- * 		if(n==1)
- * 			return 1;
- * 		return n*fac(n-1);
- * 0의 개수를 구하는 함수
- * 	 n!을 s라는 변수에 저장한다.
- *	 s을 10으로 나누고 나머지가 0이면
- *	 s을 10으로 나눈 몫을 s에 저장한다.
- * 	 이 과정을 나머지가 0이 아닐 때까지 반복한다.
+ * 0에는 무엇을 곱하든 항상 0이다. 즉 뒤에서 나온 0에 어떤 값을 곱해도
+ * 그 값은 항상 0일 것이다.
+ * 뒤자리의 값이 0이 될려면 10이 곱해져야한다. 즉 2와 5의 쌍의 개수에 따라 결정된다.
+ * 즉 n!을 소인수 분해 했을때 5의 개수가 중요한데 
+ * n를 5로 나누면 몫이 나오는데 그것이 2와 5의 쌍의 개수다.
+ * 그 이유는 몫은 5을 몇번 더했는 지를 나타내는데 factorial은 n이하의 모든 수를 곱하므로
+ * 몫은 n!에서 5가 몇번 곱해졌는 지를 나타낸다.
+ * 그렇기에 5의 거듭제곱인 25,125,...등도 나눠서 구한 몫을 더해야한다.
  *
- */
+ * */
 #include <stdio.h>
 
-unsigned long long factorial(int n)
+int factorial(int n)
 {
-	if(n==1)
-		return 1;
-	return n*factorial(n-1);
-}
-int number_zero(unsigned long long fac)
-{
-	int num=0;
-	while(fac%10==0)
+	int fiv=5;
+	int sum=0;
+	while(n>=fiv)
 	{
-		fac=fac/10;
-		num++;
-		
-	}
-	return num;
+		sum+=n/fiv;
+		fiv*=5;
+	}	
+	return sum;
 }
-
 
 
 int main(void)
 {
 	int n;
 	int num=0;
-	unsigned long long fac;
 	scanf("%d",&n);
-	fac=factorial(n);
-	num=number_zero(fac);
+	num=factorial(n);
 	printf("%d\n",num);
 	return 0;
 }
