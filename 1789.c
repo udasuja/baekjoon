@@ -16,16 +16,7 @@
  */
 
 #include <stdio.h>
-
-long long AP(long long n)
-{
-	if((n+1)%2==0)//n+1가 짝수일때
-	{
-		return ((n+1)/2)*n;
-	}
-	else
-		return (n+1)*(n/2);
-}
+#define AP(n) (((n+1)%2==0)?((n+1)/2)*n:(n+1)*(n/2))
 
 long long binary_search(long long n, long long s)
 {
@@ -50,7 +41,7 @@ int main(void)
 	long long s;
 	scanf("%lld",&s);
 	n=binary_search(s,s);
-	for(;AP(n)<=s;n++)
+	for(;AP(n)<=s;n++);
 	printf("%lld",n-1);
 	return 0;
 }
