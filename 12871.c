@@ -12,48 +12,64 @@
  *
  * 출력
  * 첫째 줄에 f(s)와 f(t)가 같으면 1을, 다르면 0을 출력한다.
+ * 
+ * 예제 입력:
+ * aba
+ * abaabaabaabaabaabaab
  *
- * algorithm:
- * s와 t문자열의 길이를 개산 후 길이가 적은 문자열을 길이가 큰 문자열 만큼 늘린다.
- * 그리고 두 문자열을 비교한다.
+ * 예제 출력:
+ * 0
+ *
  */
 #include <stdio.h>
 #include <string.h>
-#define SIZE 52
+#define SIZE 51
+
+int string_len(char*s,char*t,int len_s,int len_t)
+{
+	int k=0,i;
+	if(len_s<len_t)//s의 길이가 t보다 작을때 
+	{
+		while(k<=len_t)
+		{
+			for(i=0;i<len_s&&k<=len_t;i++)
+			{
+				if(s[i]!=t[k])//t는 i+len_s번째 요소와 s의 i번째 요소를 검사한다.
+					      //(i는 0부터 len_s까지) 				
+					return 0;		
+				k++;
+			}
+		}
+	}
+	else
+	{
+		while(k<=len_s)
+		{
+			for(i=0;i<len_t&&k<=len_s;i++)
+			{
+				if(t[i]!=s[k])					
+					return 0;		
+				k++;
+			}
+		}
+
+	}
+	return 1;
+}
 
 int main(void)
 {
-	char s[SIZE], t[SIZE], * com;
-	unsigned int len_s, len_t;
-	int i;
+	char s[SIZE],t[SIZE];
+	int len_s,len_t;
 
-	scanf("%s %s", s, t);
-	len_s = strlen(s);
-	len_t = strlen(t);
-	if (len_s < len_t)
-	{
-		com = s;
-		while (len_s < len_t)
-		{
-			strcat(s, com);//배열 이름은 가르키는 주소값을 바꾸지 못한다.
-			//하지만 포인터 변수는 그것이 가능하다.
-			//즉 strcat가 반환하는 문자열의 주소값은 포인터 변수만 저장 가능하다.
-			len_s = strlen(s);
-		}
-	}
-	else
-	{
-		com = t;
-		while (len_t < len_s)
-		{
-			strcat(t, com);
-			len_t = strlen(t);
-		}
-	}
-	i = strcmp(s, t);
-	if (i == 0)
-		printf("1");
-	else
-		printf("0");
-	return 0;
+
+	scanf("%s %s",s,t);
+	len_s=strlen(s);//널문자를 포함하지 않는 s의 길이
+	len_t=strlen(t);
+	printf("%d",string_len(s,t,len_s,len_t));
 }
+
+					
+				
+					
+
