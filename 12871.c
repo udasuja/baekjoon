@@ -12,64 +12,49 @@
  *
  * 출력
  * 첫째 줄에 f(s)와 f(t)가 같으면 1을, 다르면 0을 출력한다.
- * 
+ *
  * 예제 입력:
  * aba
  * abaabaabaabaabaabaab
- *
+ * 
  * 예제 출력:
  * 0
- *
+ * 
+ * algorithm:
+ * s와 t의 문자열의 길이를 같도록 조정(최소 공배수를 이용)하고 조정한 문자열이 같은지 비교
+ * 이때 문자 하나하나 비교하고 최소 공배수 이전에 널문자가 나오면 다시 0번째 요소로 회귀한다. 
  */
 #include <stdio.h>
 #include <string.h>
-#define SIZE 51
-
-int string_len(char*s,char*t,int len_s,int len_t)
-{
-	int k=0,i;
-	if(len_s<len_t)//s의 길이가 t보다 작을때 
-	{
-		while(k<=len_t)
-		{
-			for(i=0;i<len_s&&k<=len_t;i++)
-			{
-				if(s[i]!=t[k])//t는 i+len_s번째 요소와 s의 i번째 요소를 검사한다.
-					      //(i는 0부터 len_s까지) 				
-					return 0;		
-				k++;
-			}
-		}
-	}
-	else
-	{
-		while(k<=len_s)
-		{
-			for(i=0;i<len_t&&k<=len_s;i++)
-			{
-				if(t[i]!=s[k])					
-					return 0;		
-				k++;
-			}
-		}
-
-	}
-	return 1;
-}
+#define SIZE 52
 
 int main(void)
 {
 	char s[SIZE],t[SIZE];
 	int len_s,len_t;
-
+	int pro,i,s_l,t_l;
+	int check=1;
 
 	scanf("%s %s",s,t);
-	len_s=strlen(s);//널문자를 포함하지 않는 s의 길이
+	len_s=strlen(s);
 	len_t=strlen(t);
-	printf("%d",string_len(s,t,len_s,len_t));
-}
+	pro=(len_s==len_t?len_s:len_s*len_t);//두 문자열의 길이가 같지 않으면 두 문자열의 길이를 곱한 것을 반환
+	for(i=0,s_l=0,t_l=0;i<pro;i++,s_l++,t_l++)//pro번 반복한다.
+	{
+		if(s_l==len_s)//s_l가 s의 널문자를 가리키면 다시 초기화한다.
+			s_l=0;
+		if(t_l==len_t)//t_l가 t의 널문자를 가리키면 0으로 초기화한다.
+			t_l=0;
+		if(s[s_l]!=t[t_l])//s와 t가 서로 다르면
+		{
+			check=0;
+			break;
+		}
+	}
+	printf("%d",check);
 
-					
+	return 0;
+}
 				
 					
 
