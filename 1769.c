@@ -29,7 +29,7 @@ int main(void)
 		int k,sum=0;
 		for(k=0;x[k]!='\0';k++)//각 자리수를 더한다.
 			sum+=x[k]-'0';
-		change(x,sum);
+		sprintf(x,"%d",sum);	
 		count++;
 	}
 
