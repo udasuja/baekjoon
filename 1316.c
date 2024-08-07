@@ -36,7 +36,7 @@ int main(void)
 		for(k=1;(c=getchar())!='\n';k++)
 		{
 			int alphabat=c-'a';
-			if(arr[alphabat]!=0&&arr[alphabat]!=k-1)//c라는 변수에 저장된 문자가 며
+			if(arr[alphabat]!=0&&arr[alphabat]!=k-1)//c라는 변수에 저장된 문자가
 								//배열에 적어도 1번 저장되었고
 								//마지막으로 저장된 시행번호가
 								//현재의 시행번호보다 1적지 않을때
