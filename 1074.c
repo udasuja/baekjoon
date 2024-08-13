@@ -19,18 +19,7 @@
  * 	r이 2^(n-1)보다 크면 우하단에 있는 것이므로 -> 2^(n-1)*3*2^(n-1)을 sum에 더한다.
  * 		이때는 c을 2^(n-1)만큼 뺀다.(계산의 편의성을 위해)
  * 		이때는 r을 2^(n-1)만큼 뺀다.(계산의 편의성을 위해)
- *
- * r과 c는 0부터 시작하여 2^(n-1)까지의 값을 갖게된다.
- * r을 2로 나눴을 때 나머지가 1이 나오면 sum에 2^(n-1)*(r-1)을 곱하고 2를 더한다.
- * r을 2로 나눴을 때 나머지가 0이 나오면 sum에 2^(n-1)*r을 더한다.
- * num=0
- * for(i=0;i<c;i++)
- * 	if(num==0)
- * 		sum+=1
- * 		num=1
- * 	else
- * 		sum+=3
- * 		num=0
+ *위 코드를 (r,c)에 도달할 때까지 반복한다.
  *
  *
  */
@@ -40,53 +29,33 @@
 int main(void)
 {
 	int n, r, c;
-	int sum = 0, row, col, square, num = 0, i;
+	int sum = 0,square, i;
 	scanf("%d %d %d", &n, &r, &c);
-	square = (int)pow(2.0, (double)(n - 1));//2^(n-1)계산
+	for(i=1;i<=n;i++)
+	{
+		square = (int)pow(2.0, (double)(n - i));//2^(n-i)계산하고 이 값이 1이 되때까지 반복한다.
 
-	if(c<square)
-	{
-		if(r>square)
+		if(c<square)
 		{
-			sum+=square*square*2;
-			r-=square;
+			if(r>=square)//r은 0부터 시작하므로 r이 square보다 크거나 같을때 좌하단에 걸린다.
+			{
+				sum+=square*square*2;
+				r-=square;
+			}
 		}
-	}
-	else
-	{
-		if(r<square)
+		else//c는 0부터 시작하므로 c가 square보다 크거나 같을때 우상단,우하단에 걸린다.
 		{
-			sum+=square*square;
-			c-=square;
-		}
-		else
-		{
-			sum+=square*square*3;
-			r-=square;
-			c-=square;
-		}
-	}
-	if(r%2==0)
-	{
-		sum+=square*r;
-	}
-	else
-	{
-		sum+=square*(r-1);
-		sum+=2;
-	}
-
-	for (i = 0;i < c;i++)
-	{
-		if (num == 0)
-		{
-			sum += 1;
-			num = 1;
-		}
-		else
-		{
-			sum += 3;
-			num = 0;
+			if(r<square)
+			{
+				sum+=square*square;
+				c-=square;
+			}
+			else//r이 0부터 시작하므로 r이 square보다 크거나 같을때 우하단에 걸린다.
+			{
+				sum+=square*square*3;
+				r-=square;
+				c-=square;
+			}
 		}
 	}
 	printf("%d", sum);
