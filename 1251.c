@@ -1,50 +1,55 @@
 /*
- * ë¬¸ìžì—´ì˜ ê¸¸ì´ê°€ nì´ë¼ë©´ 0ë¶€í„° n-2ë²ˆì§¸ê¹Œì§€ íƒìƒ‰í•˜ë©´ì„œ ê°€ìž¥ ìž‘ì€ ì•„ìŠ¤í‚¤ ê°’ì„ ê°–ëŠ” ë¬¸ìžì˜ ì¸ë±ìŠ¤ ë²ˆí˜¸ë¥¼ ì €ìž¥í•œë‹¤.
- * ê·¸ë¦¬ê³  ì €ìž¥ëœ ì¸ë±ìŠ¤ ë²ˆí˜¸ê°€ kë¼ í•˜ë©´ kë¶€í„° n-1ê¹Œì§€ íƒìƒ‰í•˜ë©´ì„œ ê°€ìž¥ ìž‘ì€ ì•„ìŠ¤í‚¤ ê°’ì„ ê°–ëŠ” ë¬¸ìžì˜ ì¸ë±ìŠ¤ ë²ˆí˜¸ë¥¼ ì €ìž¥í•œë‹¤.
- * ê·¸ ì €ìž¥ëœ ì¸ë±ìŠ¤ ë²ˆí˜¸ë¥¼ jë¼ í•œë‹¤.
- * kë¶€í„° 0ê¹Œì§€ ì¶œë ¥, jë¶€í„° kê¹Œì§€ ì¶œë ¥, n-1ë¶€í„° jê¹Œì§€ ì¶œë ¥
- * ë§Œì•½ íƒìƒ‰ì„ í•˜ë‹¤ê°€ 0ë˜ëŠ” kì™€ ê°™ì€ ë¬¸ìžê°€ ë‚˜ì˜¤ë©´ ì €ìž¥ì„ í•˜ì§€ì•Šê³  ë„˜ì–´ê°„ë‹¤.
- * í•˜ì§€ë§Œ ë²”ìœ„ë‚´ì—ì„œ ê°€ìž¥ ìž‘ì€ ì•„ìŠ¤í‚¤ ê°’ ì¤‘ ì¤‘ë³µë˜ëŠ” ê²ƒì´ ìžˆìœ¼ë©´ ë” ë¨¼ ê²ƒì„ ì €ìž¥í•œë‹¤. 
+ * ÁøÂ¥ ÇÏ³ª ÇÏ³ª ½ÇÇàÇØ¾ßÇÑ´Ù.
+ * ±×·¯´Ï±ñ Ã¹±ÛÀÚºÎÅÍ ²÷°í µÎ¹øÂ° ²÷°í ±× ¹®ÀÚ¿­°ú
+ * Ã¹±ÛÀÚ ²÷°í ¼¼¹øÂ°·Î ²÷°í ±× ¹®ÀÚ¿­°ú ºñ±³ ÀÌ·±½ÄÀ¸·Î ÇÏ³ªÇÏ³ª ¸ðµç °æ¿ìÀÇ ¼ö¸¦ ºñ±³ÇØ¾ßÇÑ´Ù.
  */
 #include <stdio.h>
 #include <string.h>
 
+void reverse(char* arr)
+{
+	int len = strlen(arr);
+	int i;
+	for (i = 0; i < len / 2; i++)//¹®ÀÚ ½º¿ÒÀ» À§ÇÑ ¹Ýº¹¹® len/2º¸´Ù ÀÛÀ»¶§±îÁö ¹Ýº¹ÇÏ¹Ç·Î lenÀÌ È¦¼öÀÏ ¶§´Â °¡¿îµ¥ ÀÎµ¦½º Àü±îÁö ½ÇÇàÇÏ°í
+								 //Â¦¼öÀÏ¶§´Â abcd b±îÁö ½ÇÇàÇÑ´Ù.
+	{
+		char temp = arr[i];
+		arr[i] = arr[len - i - 1];
+		arr[len - i - 1] = temp;
+	}
+}
+
 int main(void)
 {
-	char arr[51];
-	int first=0,second;//ë§Œì•½ arr[0]ë³´ë‹¤ ìž‘ì€ ì•„ìŠ¤í‚¤ ê°’ì´ ì—†ìœ¼ë©´ firstì—ëŠ” 0ì„ ì €ìž¥í•œë‹¤.
-	int i,len;
-
-	scanf("%s",arr);
-	len=strlen(arr);
-
-
-	for(i=1;i<len-2;i++)
+	char arr[51], min_arr[] = { "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" };//ÄÚµå¸¦ ½ÇÇàÇÏ¸é¼­ ÃÖ¼Ò ¹®ÀåÀ» Ã£¾Æ¾ß ÇÏ¹Ç·Î ÃÖ´ë ¹®ÀåÀ¸·Î ÃÊ±âÈ­ÇÑ´Ù.
+	int i, len, k;
+	scanf("%s", arr);
+	len = strlen(arr);
+	for (i = 1; i < len - 1; i++)//Ã¹¹øÂ° ÀÎµ¦½ººÎÅÍ ²÷¾î ¸¶Áö¸·¿¡¼­ 2¹øÂ° ¾ÕÀÇ ÀÎµ¦½º±îÁö ¹Ýº¹ÇÑ´Ù.
 	{
-		if(arr[first]>=arr[i]&&arr[i]!=arr[0])//0ë¶€í„° len-2ê¹Œì§€ ë¬¸ìžì¤‘ ê°€ìž¥ ìž‘ì€ ì•„ìŠ¤í‚¤ê°’ì„ ì°¾ëŠ” ê²ƒì´ë‹¤.
+		for (k = i + 1; k < len; k++)//i¹øÂ° ÀÎµ¦½ººÎÅÍ ²÷¾î ¸¶Áö¸·¿¡¼­ 1¹øÂ° ¾ÕÀÇ ÀÎµ¦½º±îÁö ¹Ýº¹ÇÑ´Ù.
 		{
-			first=i;
+			char first[51], second[51], third[51];
+			char new_word[51];
+			strncpy(first, arr, i);//first¿¡ arrÀÇ ¹®ÀÚ¿­À» i°³ º¹»çÇÑ´Ù.
+			first[i] = '\0';
+			strncpy(second, arr + i, k - i);//i¹øÂ°ºÎÅÍ ½ÃÀÛÇÏ¿© k-i°³¸¦ º¹»çÇÑ´Ù.
+			//±×·¸±â¿¡ arr+i¸¦ ÇÏ¿© ½ÃÀÛ ÁÖ¼Ò°ªÀ» i¹øÂ° index·Î ÇÑ´Ù.
+			second[k - i] = '\0';
+			strncpy(third, arr + k, len - k);//ÀÌ°Íµµ k¹øÂ°ºÎÅÍ ³¡±îÁö º¹»çÇÏ±âÀ§ÇØ
+			//arr+k¸¦ ½ÃÀÛ ÁÖ¼Ò°ªÀ¸·Î ÇÏ¿© len-k°³ º¹»çÇÑ´Ù.
+			third[len - k] = '\0';
+			reverse(first);
+			reverse(second);
+			reverse(third);
+			strcpy(new_word, first);//new_word¶ó´Â ¹è¿­¿¡ firstºÎÅÍ third±îÁö Â÷·Ê´ë·Î Áý¾î³Ö´Â´Ù. Ã³À½¿¡´Â first¸¦ º¹»çÇÑ´Ù.
+			strcat(new_word, second);//firstµÞÆí¿¡ reverseÇÑ second¸¦ ºÙÀÓ
+			strcat(new_word, third);//first¿Í ºÙ¿©Áø secondµÚ¿¡ third¸¦ ºÙÀÓ
+			if (strcmp(new_word, min_arr) < 0)//new_word¿Í min_arr´Â ¼­·Î ´Ù¸£´Ù. ´Þ¶óÁö´Â ¹®ÀÚ¸¦ ºñ±³ÇÏ¿© new_wordÀÇ ¹®ÀÚ°¡ ÀÛÀ¸¸é
+											  //À½¼ö¸¦ ¹ÝÈ¯ÇÏ¹Ç·Î min_arr¸¦ new_word·Î µ¤´Â´Ù.
+				strcpy(min_arr, new_word);
+
 		}
 	}
-	second=first+1;//ë§Œì•½ arr[first+1]ë³´ë‹¤ ìž‘ì€ ì•„ìŠ¤í‚¤ ê°’ì´ ì—†ìœ¼ë©´ secondì—ëŠ” first+1ì„ ì €ìž¥í•œë‹¤.
-	for(i=first+2;i<len-1;i++)//kë‹¤ìŒì˜ ë¬¸ìžë¶€í„° ë¹„êµë¶„ì„í•œë‹¤.
-	{
-		if(arr[second]>=arr[i])
-		{
-			second=i;
-		}
-	}
-	for(i=first;i>=0;i--)
-	{
-		printf("%c",arr[i]);
-	}
-	for(i=second;i>first;i--)
-	{
-		printf("%c",arr[i]);
-	}
-	for(i=len-1;i>second;i--)
-	{
-		printf("%c",arr[i]);
-	}
-
+	printf("%s", min_arr);
 }
