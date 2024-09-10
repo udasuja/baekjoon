@@ -1,71 +1,38 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <stdlib.h>
+#define SIZE 52
 
-typedef struct node
+int check(char* paren)
 {
-	char ch;
-	struct node* link;
-}node;
-
-node* parenthesis_open(node* list, char s)
-{
-	
-	node* new_node = (node*)malloc(sizeof(node));
-	new_node->ch = s;
-	new_node->link = list;//list에는 first가 가리키는 node의 주소값이 저장되어 있다.
-	return new_node;//new_node에 저장된 동적 할당된 node의 주소값을 반환함
-}
-
-node* parenthesis_close(node* list,int *check)
-{
-	if(list!=NULL&&list->ch=='(')
+	int i,top = -1;
+	for (i = 0; paren[i] != '\n'; i++)
 	{
-		node* temp = list->link;
-		printf("%c\n", list->ch);
-		free(list);
-		return temp;
+		if (paren[i] == '(')
+		{
+			top += 1;
+		}
+		else if(paren[i]==')')//i번째 문자가 )인경우 top이 0이상이면 (이 한 번은 나왔다는 것이다.
+		{
+			if (top == -1)//문자 )를 입력받았지만 앞에 (문자가 없는 경우
+				return 0;
+			top--;
+		}
 	}
-	*check = 1;
-	return list;
+	return top == -1;//top이 -1이라면 (와 )가 같은 개수라는 뜻이다.
 }
-
-void remove_node(node*first,int *check)
-{
-	while (first != NULL)
-	{
-		node* temp = first->link;
-		free(first);
-		first = temp;
-		*check = 1;//first가 null이 아니라는 것은 (와)의 개수가 일치하지 않는다는 것이다.
-	}
-}
-
 
 int main(void)
 {
 	int n;
 	scanf("%d", &n);
-	getchar();//개행 문자 제거
+	getchar();
+
 	while (n--)
 	{
-		node* first = NULL;//node를 가리키는 포인터 변수
-		int check = 0;
-		char c;
-		while ((c = getchar()) != '\n')
-		{
-			if (c == '(')
-			{
-				first = parenthesis_open(first, c);//first가 가리키는 node의 주소값을 전달, 입력받은 문자 c를 전달
-			}
-			else if(c==')')
-			{
-				first = parenthesis_close(first, &check);
-			}
-		}
+		char paren[SIZE];
+		fgets(paren, SIZE, stdin);
 
-		remove_node(first,&check);
-		if (check==0)
+		if (check(paren))
 		{
 			printf("YES\n");
 		}
