@@ -19,39 +19,30 @@
 8이 수열에 네번째 자리에 있으므로 스택은 7과 8을 push했다. 그리고 8를 pop했다. -> +가 2번 나오고 -가 1번 나옴
 7이 수열에 다섯번째 자리에 있으므로 스택은 7를 pop했다. -> -가 1번 나옴
 
-linked list를 구현하여 +혹은 -를 element에 집어넣는다.
-이때 arr[i]의 값에 대한 stack배열 인덱스 한 칸 앞의 값이 1이면 NO를 출력하고 프로그램을 종료한다.
+3개의 배열을 동적할당한다. 하나는 수열에 관한 배열로 int형 n개의 인덱스를 갖도록
+다른 하나는 stack에 관한 배열로 int형 n개의 인덱스를 갖도록
+마지막으로 +,-에 관한 배열로 char형 n*2개의 인덱스를 갖도록(+는 n개가 무조건 출력되야하고, -도 n개가 무조건 출력되야되므로)
 
-배열을 2개 구현한다. 그리고 linked list를 구현한다.
-하나는 arr로 다른 하나는 스택으로 구현한다.
-스택에는 k값을 차례대로 집어넣는다.
-그리고 top를 이용하여 스택에 얼마나 들어왔는지 저장한다.
-push를 통해 k값과 top값을 증가시키고 스택에 넣고 linked list에는 +를 집어넣는다.
-그리고 pop를 통해 top값을 감소시키고 스택에서 값을 제거시킨다. 만약 pop하는 값이 top인덱스에 있는 값이 아니면 NO를 출력하고 종료한다.
-push pop 반복문을 끝내면 linked list에 저장된 +를 출력한다. 
-
+arr[i]값 이전의 값을 전부다 stack에 집어넣는다. 반복되는 횟수만큼 ch_arr에도 +를 집어넣는다.
+stack[top]값이랑 arr[i]값이 서로 다르면 stack의 맨 꼭대기의 있는 값을 반환하는 것이 아니므로 no를 출력하고 프로그램을 종료한다.
+하지만 둘이 같으면 stack[top]값을 출력하고 -를 ch_arr에 집어넣는다.
 */
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 
-
-typedef struct node
-{
-	char c;
-	struct node* link;
-}node;
-
 int main(void)
 {
 	int i,n,k=0;
 	int* stack, * arr;
-	int top = -1;
-	node* first=NULL;
+	int top = -1,ch_top=-1;
+	char* ch_arr;
 
 	scanf("%d", &n);
 	stack = (int*)malloc(sizeof(int) * n);
 	arr = (int*)malloc(sizeof(int) * n);
+	ch_arr = (char*)malloc(sizeof(char) * (n * 2 + 1));
+
 
 	for (i = 0; i < n; i++)
 	{
@@ -63,16 +54,12 @@ int main(void)
 	{
 		while (k < arr[i])//i번째 값이 이전 값보다 크면 push를 진행함
 		{
-			node* new_node = (node*)malloc(sizeof(node));
 			top++;//스택의 인덱스에 해당
 			k++;//스택에 들어갈 값에 해당
+			ch_top++;
 			stack[top] = k;
-			new_node->c = '+';
-			new_node->link = first;//first가 가리키는 것을 new_node가 가리키고
-			first = new_node;//first는 동적할당된 새로운 node를 가리킨다.
-	//		printf("k: %d, top: %d, stack[top]: %d ", k, top, stack[top]);
+			ch_arr[ch_top] = '+';
 		}
-	//	printf("\n");
 		if (stack[top] != arr[i])//만약 i번째 값이 이전 값보다 작으면 위 반복문을 실행하지 않는데, top번째 값이랑 다르면 스택에 맨 위에 값이 아니라는 것이다.
 		{
 			printf("NO\n");
@@ -80,14 +67,15 @@ int main(void)
 		}
 		else 
 		{
-			node* new_node = (node*)malloc(sizeof(node));
-			new_node->c = '-';
-			new_node->link = first;
-			first = new_node;
+			ch_top++;
+			ch_arr[ch_top] = '-';
 			stack[top] = 0;//초기화
 			top--;//가리키는 인덱스를 하나 감소시킨다.
 		}
 	}
-	reflexive(first);
+	for (i = 0; i <= ch_top; i++)//+,-를 차례대로 출력한다.
+	{
+		printf("%c\n", ch_arr[i]);
+	}
 
 }
