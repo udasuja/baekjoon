@@ -52,62 +52,114 @@ P $->$라는 문자를 커서 왼쪽에 추가함
 	출력
 	yxz
 
-top은 배열의 인덱스를 가리키고 왼쪽의 값을 해당 인덱스로 인식하고
-오른쪽의 값은 1증가된 인덱스를 인식하도록 한다.
+연결리스트를 사용한 스택을 구현하여 이 문제를 풀 수 있을 것이라고 생각한다.(dmih가 입력되었다면 h가 스택 상단에 위치, d가 스택 하단에 위치)
+L과 D가 나오면 top값을 각각 1더하고, 1빼는 식으로 연산을 지속하고
+B나 P가 나오면 그 top값 만큼 연결리스트에 들어가며 top위치에 값을 제거하거나 그 위치에 문자를 추가한다. 
+
+이때 top구초체는 몇 번째 node를 가리키고 있는지에 대한 정수값과 그 node에 대한 주소값을 저장한다.
+node는 앞뒤 node 모두 가리키고, L이 입력되면 top-- 후 뒤에 node를 가리킨다. 만약 뒤에 node가 null이면 top에는 -1이 저장
+
+
 */
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <string.h>
-#define SIZE 600001
+#include <stdlib.h>
+
+typedef struct node
+{
+	char c;
+	struct node* left;
+	struct node* right;
+}node;
+
+typedef struct 
+{
+	node* top_node;
+	int top_int;
+}Top;
 
 int main(void)
 {
-	int top,n;
-	char arr[SIZE];
-	scanf("%s", arr);
-	top = strlen(arr)-1;//널문자 바로 앞에 있는 index값으로 초기화한다.->가장 오른쪽에 위치하도록 함
+	node last = { '\0',NULL,NULL };//마지막 node
+	node first = { '\0',NULL,&last };//첫번째 node
+	Top top = { &first,-1 };
+	int n;
+	char ch;
+	last.left = &first;//마지막 node의 left는 first를 가리키도록 함
+
+	while ((ch = getchar()) != '\n')
+	{
+		node* new_node = (node*)malloc(sizeof(node));
+		node* last_l = last.left;
+		new_node->c = ch;
+		new_node->left = last_l;
+		new_node->right = &last;
+		last.left = new_node;
+		last_l->right = new_node;
+		top.top_int += 1;
+		top.top_node = new_node;
+	}
+	//top.top_int는 위 반복문으로 추가된 'node의 개수-1개'의 값을 저장한다.
 
 	scanf("%d", &n);
 	getchar();
 	while (n--)
 	{
-		char comm[5];//L,D,B,P &를 저장하는 배열
+		char comm[5];
 		fgets(comm, 5, stdin);
+
 		switch (comm[0])
 		{
-		case'L':
-			top -= top == -1 ? 0 : 1;//top이 -1이라면 왼쪽 끝에 다달았다는 것이다.
-			break;
-		case'D':
-			top += top == strlen(arr)-1 ? 0 : 1;//top이 널문자 바로 앞에 있는 index값이라면 가장 오른쪽에 있는 것이다.
-			break;
-		case'B':
-			if (top != -1)
+		case 'L':
+			if (top.top_int != -1)//가장 왼쪽이 아니라면
 			{
-				int left = top, right = top + 1;
-				while (arr[right] != '\0')
-				{
-					arr[left] = arr[right];//오른쪽에 있는 모든 문자를 다 왼쪽으로 한 칸씩 옮긴다.
-					left++;
-					right++;
-				} 
-				arr[left] = arr[right];//널문자도 한 칸 왼쪽으로 이동시킨다.
-				top--;//문자를 지웠으므로 커서는 한 칸 왼쪽으로 이동된다.
+				top.top_int -= 1;//top_int에 1를 빼고
+				top.top_node = (top.top_node)->left;//왼쪽 node를 가리키도록 함
 			}
 			break;
-		case'P':
+		case 'D':
+			if ((top.top_node)->right != &last)//top.top_node의 right가 가리키는 node가 last가 아니면
+			{
+				top.top_int += 1;
+				top.top_node = (top.top_node)->right;
+			}
+			break;
+		case 'B':
+			if (top.top_node != &first)//top_int가 -1이면 맨 왼쪽에 있으므로 왼쪽 node를 삭제할 수 없다.
+			{
+				node* left_n = (top.top_node)->left;//left_n은 삭제할려는 node 왼쪽 node를 가리킨다.
+				node* right_n = (top.top_node)->right;//right_n은 삭제할려는 node 오른쪽 node를 가리킨다.
+				right_n->left = left_n;//A B C 노드들이 이런 순으로 연결되있으면 C node의 left가 B가 아닌 A를 가리키게 된다.
+				left_n->right = right_n;//A node의 right가 B가 아닌 C를 가리키게 된다.
+				free(top.top_node);
+				top.top_int -= 1;//B node가 삭제되고 top은 A를 가리키도록 한다.
+				top.top_node = left_n;
+			}
+			break;
+		case 'P':
 		{
-			int left = strlen(arr), right = strlen(arr)+1;
-			while (left != top)
-			{
-				arr[right] = arr[left];
-				left--;
-				right--;
-			}
-			arr[++top] = comm[2];
+			node* new_node = (node*)malloc(sizeof(node));
+		
+			//A B 노드들이 이런 순으로 연결되어있다. 이때 C node를 A와 B사이에 추가한다.
+			node* last_n = (top.top_node)->right;//B node, top.top_node는 last이전까지만 저장되기에 right는 null이 무조건 아니다.
+			new_node->c = comm[2];
+			new_node->left = last_n->left;//C의 left가 A를 가리키도록 함
+			new_node->right = last_n;//C의 right가 B를 가리키도록 함
+			(last_n->left)->right = new_node;//A의 right가 C를 가리키도록 함
+			last_n->left = new_node;//B의 left가 C를 가리키도록 함
+			top.top_int += 1;
+			top.top_node = new_node;
+			break;
 		}
 		}
 	}
-	printf("%s", arr);
+	while ((first.right) != &last)
+	{
+		node* temp = first.right;
+		printf("%c", temp->c);
+		first.right = temp->right;
+		free(temp);
+	}
+
 }
