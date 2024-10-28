@@ -85,4 +85,7 @@ int main(void)
 			printf(", ");
 	}
 	printf(">");
+	free(run_q.data);
+	free(sto_q.data);
+	return 0;
 }
