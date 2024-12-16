@@ -25,28 +25,37 @@ void pop(void)
 int main(void)
 {
 	char c;
+	int tag = 0;
+
 
 	//enter key 입력 전까지 반복
 	while ((c = getchar()) != '\n')
 	{
-		if (c == ' ')
-		{
-			pop();			//스택 내의 모든 원소 출력
-			printf("%c", c); //공백 출력
-			continue;	//공백 문자를 stack에 넣지 않기 위해 continue
-		}
-		else if (c == '<')
+		if (c == '<')
 		{
 			pop();
-			printf("%c", c);	//<출력
-			while ((c = getchar()) != '>')
-			{
-				printf("%c", c);
-			}
-			printf("%c", c);	//>출력
-			continue;	//>문자를 stack에 넣지 않기 위해 continue
+			printf("%c", c);
+			tag = 1;	//<문자가 입력됨을 표시
 		}
-		string_s[++top] = c;
+		else if (c == '>')	//이 조건문이 tag==1조건보다 앞에 나와야지만 
+							//tag==1일 때 tag를 0값을 갖도록 바꿀 수 있다.
+		{
+			printf("%c", c);
+			tag = 0;
+		}
+		else if (tag == 1)
+		{
+			printf("%c", c);
+		}
+		else if (c == ' ')
+		{
+			pop();
+			printf("%c", c);
+		}
+		else
+		{
+			string_s[++top] = c;
+		}
 	}
 	pop();
 	return 0;
