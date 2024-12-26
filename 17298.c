@@ -1,71 +1,57 @@
 /*
-Ai의 오른쪽에 있는 수들 중
-Ai보다 큰 수들 중
-가장 왼쪽에 있는 수
+배열의 마지막 원소부터 for문을 시작하여 현재 stack의 top이 가리키는 값과 비교한다. 
+만약 가리키는 값보다 현재의 배열의 원소 값이 더 크면 pop연산을 하고 
+작으면 그 값이 현재의 배열의 원소의 오큰수가 된다(이때는 pop연산을 하지 않음). 
+만약 stack이 비어있으면 현재의 원소의 오큰수는 -1이 된다. 
+(현재의 배열의 원소값보다 작을 때만 pop연산을 함으로 오큰수를 재활용할 수 있다.
+즉 3 2 7일 때 2의 오큰수를 구한뒤 pop연산을 안하기 때문에
+2의 오큰수도 7이 될 수 있고, 3의 오큰수도 7이 될 수 있다.)
+그리고 현재 i에 대한 for문의 마지막 명령은 현재의 배열의 원소값을 push하는 것이다.
 
-풀이
-Ai오른쪽에 있는 모든 수들 중 가장 먼저 만나는 Ai보다 큰 수를 출력한다.
-없으면 -1를 출력한다.
-하지만 이렇게 하면 시간 초과
-
-또 다른 풀이
-배열을 세 개 만든다. 
-한 개는 원래의 배열이고 이 배열의 이름을 c라 하자,
-다른 개는 정렬할 배열이고, 
-마지막 한 개는 정렬할 배열의 인덱스가 저장된다.
-정렬할 배열을 A라 하겠다. 그리고 인덱스 배열을 B라 하겠다.
-A배열을 정렬함과 동시에 B배열도 정렬하는데
-A배열 내의 a[8]=9이고, a[1]=11일때 이 둘의 위치를 바꾼다면
-a[1]=9,a[8]=11가 될 것이다. 이때 배열 B에서의 b[1]=1, b[8]=8은
-b[1]=8, b[8]=1가 된다. 
-즉 b[1]=8은 a배열의 인덱스 1이 가리키는 값이
-a배열의 인덱스 8로 갔다는 의미가 된다.
-b[8]=1은 a배열의 인덱스 8이 가리키는 값이
-a배열의 인덱스 1로 갔다는 의미가 된다.
-
-이런 식으로 두 배열의 정렬을 마치고
-a배열은 이제는 안쓸 것이므로 여기에 출력값을 저장하겠다.
-b배열을 참고하여 
 */
 
 #include <stdio.h>
-#include <stdlib.h>
 #define SIZE 1000000
 
+int stack[SIZE];//현재 원소의 오른쪽 원소들을 stack에 저장
 int sequ[SIZE];
+int resu[SIZE];//결과(오큰수) 저장
+int top = -1;
 
-
+int empty(int top)
+{
+	return top == -1;
+}
 
 int main(void)
 {
-	int n;
-	int i;
+	int n, k;
 
 	scanf_s("%d", &n);
-	for (i = 0;i < n;i++)
+	for (k = 0;k < n;k++)
 	{
-		scanf_s("%d", &sequ[i]);
+		scanf_s("%d", &sequ[k]);
 	}
 
-	for (i = 0;i < n;i++)
+	for (k = n - 1;k >= 0;k--)
 	{
-		
-		int k,right=0;
-		int com = sequ[i];
-
-		for (k = i+1;k < n;k++)
+		while (!empty(top) && stack[top] <= sequ[k])	
+		//stack의 top값이 현재 원소보다 작거나 같으면 그 값을 pop한다.
 		{
-			if (com < sequ[k])
-			{
-				right = sequ[k];
-				break;
-			}
+			top--;//pop연산
 		}
-		if (right != 0)
-			printf("%d ", right);
+		if (empty(top))
+		{
+			resu[k] = -1;	//오큰수가 없는 경우
+		}
 		else
-			printf("-1 ");
-		
-		
+		{
+			resu[k] = stack[top];	//stack의 top이 오큰수인 경우
+		}
+
+		stack[++top] = sequ[k];	//현재의 원소값 push
 	}
+	for (k = 0;k < n;k++)
+		printf("%d ", resu[k]);
+	return 0;
 }
