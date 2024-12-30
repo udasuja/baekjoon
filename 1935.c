@@ -19,7 +19,57 @@ switch문으로 각 연산자에 대한 연산을 한다(b '연산자' a).
 
 널문자에 도달하면 stack에는 최종 결과값만 들어있을 것이다.
 이 값을 pop하여 결과값을 출력한다.
-
-이때 연산자 문자 +, -, *, /는 각각 -1부터 -4에 대응된다.
 */
+#include <stdio.h>
+#define SIZE 100
 
+double stack[SIZE];	//stack에는 항상 피연산자 값이 들어있다. 피연산자는 항상 연산자 앞에 온다. 
+int top = -1;
+
+int main(void)
+{
+	char arr[SIZE];
+	double count[26];	//사용자가 입력한 피연산자의 값
+	int n,i;
+
+	scanf_s("%d", &n);
+	scanf_s("%s", &arr, SIZE);
+
+	for (i = 0;i < n;i++)
+	{
+		scanf_s("%lf", &count[i]);
+	}
+
+	for (i = 0;arr[i]!='\0';i++)
+	{
+		if (arr[i] == '+' || arr[i] == '-' || arr[i] == '*' || arr[i] == '/')	//연산자인 경우
+		{
+			double b = stack[top--];//나중에 삽입된 값
+			double a = stack[top--];//먼저 삽입된 값
+			switch (arr[i])
+			{
+			case'+':
+				stack[++top] = a + b;
+				break;
+			case'-':
+				stack[++top] = a - b;
+				break;
+			case'*':
+				stack[++top] = a * b;
+				break;
+			case'/':
+				stack[++top] = a / b;
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			stack[++top] = count[arr[i] - 'A'];
+		}
+	}
+	printf("%.2lf", stack[top--]);
+
+	return 0;
+}
